@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João Vitor Klabacher Carvalho | Portfólio de Desenvolvedor</title>
+    
+    <!-- Importa a fonte 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <!-- Importa o CSS -->
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+    <!-- 1. Barra de Progresso -->
+    <div id="scroll-progress-bar"></div>
+    
+    <!-- 2. Botão Voltar ao Topo -->
+    <a href="#hero" id="scroll-to-top" title="Voltar ao topo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+        </svg>
+    </a>
+
+    <!-- 3. Header e Navegação -->
+    <header id="main-header">
+        <nav>
+            <a href="#hero" class="nav-logo">
+                <!-- Icone Adicionado -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: -2px;">
+                    <path d="M7 8L3 12L7 16" stroke="var(--accent-cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17H21" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                JV<span>K</span>C
+            </a>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#projects">Projetos</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#impact">Impacto</a></li>
+                <li><a href="#footer" class="cta-button cta-nav">Contato</a></li>
+            </ul>
+            
+            <div class="hamburger" id="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 4. Conteúdo Principal -->
+    <main>
+
+        <!-- 4.1. SEÇÃO HERO -->
+        <section id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="typing-effect" data-text="João Vitor K. Carvalho"></h1>
+                    <p class="tagline">Desenvolvedor | <strong>Automação</strong>, <strong>IA/ML</strong>, <strong>Dados</strong> & <strong>Operação</strong></p>
+                    <a href="#projects" class="cta-button magnetic-button">
+                        Veja meus projetos
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4.2. SEÇÃO ABOUT -->
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Sobre Mim</h2>
+                <div class="about-content">
+                    <div class="about-card magnetic-card animate-on-scroll" data-delay="100">
+                        <p>
+                            Profissional técnico especializado em construir e otimizar soluções de dados, 
+                            automação e Inteligência Artificial.
+                        </p>
+                        <p>
+                            Meu foco é transformar processos complexos em sistemas eficientes, 
+                            desde o ETL robusto e pipelines de dados até a implementação de modelos de ML 
+                            e arquiteturas de IA (RAG e Multi-Agentes) que geram resultados de negócio mensuráveis.
+                        </p>
+                    </div>
+                    
+                    <div class="stack-highlight animate-on-scroll" data-delay="200">
+                        <h3>Stack Principal:</h3>
+                        <div class="stack-list">
+                            <span class="stack-item">Python</span>
+                            <span class="stack-item">SQLModel</span>
+                            <span class="stack-item">Pandas</span>
+                            <span class="stack-item">Flask</span>
+                            <span class="stack-item">Streamlit</span>
+                            <span class="stack-item">React</span>
+                            <span class="stack-item">Docker</span>
+                            <span class="stack-item">IA/ML</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4.3. SEÇÃO PROJETOS -->
+        <section id="projects">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Projetos</h2>
+                <div class="projects-grid">
+
+                    <!-- Projeto 1 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="0">
+                        <div class="project-header collapsible-toggle" data-target="proj-1">
+                            <h3>Plataforma de Analytics (Call Center)</h3>
+                            <div class="project-tags">
+                                <span class="project-tag python">Python</span>
+                                <span class="project-tag">Flask</span>
+                                <span class="project-tag">Streamlit</span>
+                                <span class="project-tag">Docker</span>
+                                <span class="project-tag azure">Azure</span>
+                            </div>
+                            <p class="description">ETL robusto, dashboards, modelos de churn e validação de telefone.</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-1">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Alta volumetria de dados de chamadas sem governança ou insights.</p>
+                                <ul>
+                                    <li>Desenvolvimento de pipeline ETL com Python (Pandas, SQLModel) para processar milhões de registros.</li>
+                                    <li>Criação de API Flask para servir dados tratados.</li>
+                                    <li>Dashboards interativos com Streamlit para análise de performance.</li>
+                                    <li>Deploy da solução em contêineres Docker no Azure.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 2 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="100">
+                        <div class="project-header collapsible-toggle" data-target="proj-2">
+                            <h3>Base de Conhecimento RAG (PDF)</h3>
+                            <div class="project-tags">
+                                <span class="project-tag python">Python</span>
+                                <span class="project-tag ia">IA/RAG</span>
+                                <span class="project-tag">Pandas</span>
+                                <span class="project-tag">Markdown</span>
+                            </div>
+                            <p class="description">Estruturação inteligente de PDFs para consumo por agentes de IA.</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-2">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Documentação interna (PDFs) inacessível para sistemas de IA.</p>
+                                <ul>
+                                    <li>Script de parsing de PDFs complexos, extraindo tabelas, texto e metadados.</li>
+                                    <li>Segmentação (chunking) inteligente de conteúdo, respeitando seções.</li>
+                                    <li>Formatação de saída em Markdown estruturado, pronto para embedding e busca vetorial (RAG).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 3 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="200">
+                        <div class="project-header collapsible-toggle" data-target="proj-3">
+                            <h3>Arquitetura Multi-Agent (Auditoria)</h3>
+                            <div class="project-tags">
+                                <span class="project-tag python">Python</span>
+                                <span class="project-tag ia">IA/Multi-Agent</span>
+                            </div>
+                            <p class="description">Propostas de arquitetura, roteamento e análise de latência/token.</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-3">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Diagnosticar e auditar sistemas complexos usando IA.</p>
+                                <ul>
+                                    <li>Design de múltiplos agentes (Supervisor, Analista, Redator) para tarefas específicas.</li>
+                                    <li>Implementação de roteamento avançado (router) para decidir qual agente/ferramenta usar.</li>
+                                    <li>Geração de relatórios técnicos detalhados com base nas descobertas dos agentes.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 4 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="0">
+                        <div class="project-header collapsible-toggle" data-target="proj-4">
+                            <h3>Automação (Power Automate Desktop)</h3>
+                            <div class="project-tags">
+                                <span class="project-tag">Power Automate</span>
+                                <span class="project-tag">JSON</span>
+                                <span class="project-tag">RPA</span>
+                            </div>
+                            <p class="description">Parsing de JSON, loops dinâmicos e logs integrados para automação RPA.</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-4">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Processos manuais repetitivos dependentes de APIs e sistemas legados.</p>
+                                <ul>
+                                    <li>Extração e parsing de dados de APIs (JSON) dentro do Power Automate.</li>
+                                    <li>Criação de loops dinâmicos para iterar sobre resultados de API.</li>
+                                    <li>Implementação de sistema de logs robusto para monitoramento da automação.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 5 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="100">
+                        <div class="project-header collapsible-toggle" data-target="proj-5">
+                            <h3>Extensão Chrome (Roll20)</h3>
+                            <div class="project-tags">
+                                <span class="project-tag js">JavaScript</span>
+                                <span class="project-tag react">React</span>
+                                <span class="project-tag">Webpack</span>
+                            </div>
+                            <p class="description">Overlay interativo e integração sem quebra de interface (non-breaking).</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-5">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Adicionar funcionalidades a uma plataforma web (Roll20) sem acesso à API.</p>
+                                <ul>
+                                    <li>Injeção de overlay React na página existente.</li>
+                                    <li>Uso de Webpack para empacotar a extensão.</li>
+                                    <li>Manipulação do DOM (JavaScript) para ler e interagir com elementos da plataforma.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 6 -->
+                    <div class="project-card magnetic-card animate-on-scroll" data-delay="200">
+                        <div class="project-header collapsible-toggle" data-target="proj-6">
+                            <h3>Workshop "IA sem Mistério"</h3>
+                            <div class="project-tags">
+                                <span class="project-tag">Facilitação</span>
+                                <span class="project-tag ia">IA/Educação</span>
+                            </div>
+                            <p class="description">Capacitação interna sobre IA, incluindo "AI Twins" e geração de captions.</p>
+                            <button class="expand-button">
+                                Ver mais
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="proj-6">
+                            <div class="project-details-content">
+                                <p><strong>Desafio:</strong> Desmistificar o uso de IA Generativa para equipes não-técnicas.</p>
+                                <ul>
+                                    <li>Criação de material didático sobre Prompt Design e limitações da IA.</li>
+                                    <li>Facilitação de workshops práticos.</li>
+                                    <li>Demonstração de ferramentas (AI Twins, Captions) para aumentar a produtividade.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4.4. SEÇÃO SKILLS -->
+        <section id="skills">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Skills</h2>
+                <div class="skills-grid">
+                    
+                    <div class="skill-category animate-on-scroll" data-delay="0">
+                        <h3>Avançado</h3>
+                        <div class="skill-list">
+                            <span class="skill-item">Python</span>
+                            <span class="skill-item">Markdown</span>
+                            <span class="skill-item">Excel / GSheets</span>
+                            <span class="skill-item">Prompt Design</span>
+                            <span class="skill-item">Análise de Dados</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category animate-on-scroll" data-delay="100">
+                        <h3>Intermediário</h3>
+                        <div class="skill-list">
+                            <span class="skill-item">Flask</span>
+                            <span class="skill-item">SQLModel</span>
+                            <span class="skill-item">LightGBM</span>
+                            <span class="skill-item">Streamlit</span>
+                            <span class="skill-item">Docker</span>
+                            <span class="skill-item">React</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category animate-on-scroll" data-delay="200">
+                        <h3>Básico / Estudando</h3>
+                        <div class="skill-list">
+                            <span class="skill-item">Azure</span>
+                            <span class="skill-item">Chatwoot</span>
+                            <span class="skill-item">Matplotlib</span>
+                            <span class="skill-item">Power BI</span>
+                            <span class="skill-item">TypeScript</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4.5. SEÇÃO IMPACTOS -->
+        <section id="impact">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Resultados & Impacto</h2>
+                <div class="impact-grid">
+                
+                    <div class="impact-card animate-on-scroll" data-delay="0">
+                        <div class="impact-icon">📈</div>
+                        <h3>Governança de Dados</h3>
+                        <p>Melhoria na qualidade e acessibilidade dos dados para tomada de decisão.</p>
+                    </div>
+                    
+                    <div class="impact-card animate-on-scroll" data-delay="100">
+                        <div class="impact-icon">⚙️</div>
+                        <h3>Redução de Erros</h3>
+                        <p>Automação de processos manuais, diminuindo retrabalho e falha humana.</p>
+                    </div>
+                    
+                    <div class="impact-card animate-on-scroll" data-delay="200">
+                        <div class="impact-icon">🎓</div>
+                        <h3>Capacitação Interna</h3>
+                        <p>Multiplicação de conhecimento técnico (IA e Dados) dentro das equipes.</p>
+                    </div>
+                    
+                    <div class="impact-card animate-on-scroll" data-delay="300">
+                        <div class="impact-icon">📊</div>
+                        <h3>Frameworks Preditivos</h3>
+                        <p>Implementação de modelos para análise de Churn e Quality Assurance (QA).</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4.6. SEÇÃO ESTUDOS DE CASO -->
+        <section id="case-studies">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Estudos de Caso</h2>
+                <div class="case-study-list">
+                
+                    <!-- Caso 1 -->
+                    <div class="case-study-card animate-on-scroll" data-delay="0">
+                        <div class="case-study-header collapsible-toggle" data-target="case-1">
+                            <h3>Caso 1: Alta taxa de erro em emails</h3>
+                            <button class="expand-button">
+                                Detalhes
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="case-1">
+                            <div class="project-details-content">
+                                <p><strong>Problema:</strong> Operação enviava emails manualmente com base em planilhas, gerando alta taxa de erro e retrabalho.</p>
+                                <p><strong>Solução:</strong> Criação de um script Python que consumia uma API interna, validava os dados contra a planilha e automatizava o disparo de emails (via Power Automate) apenas para os casos corretos, gerando um log de exceções.</p>
+                                <p><strong>Resultado:</strong> Redução de 95% nos erros de envio e 4 horas/semana economizadas da equipe.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Caso 2 -->
+                    <div class="case-study-card animate-on-scroll" data-delay="100">
+                        <div class="case-study-header collapsible-toggle" data-target="case-2">
+                            <h3>Caso 2: Latência em arquitetura IA</h3>
+                            <button class="expand-button">
+                                Detalhes
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="project-details" id="case-2">
+                            <div class="project-details-content">
+                                <p><strong>Problema:</strong> Um sistema Multi-Agente apresentava alta latência, pois o "Agente Supervisor" analisava o histórico completo de chat a cada nova mensagem.</p>
+                                <p><strong>Solução:</strong> Refatoração do prompt do Supervisor para analisar apenas as últimas 3 mensagens e um resumo do histórico (gerado por outro agente em background), e não o histórico bruto.</p>
+                                <p><strong>Resultado:</strong> Redução de 60% na latência de resposta e 40% na utilização de tokens de entrada (contexto).</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 5. FOOTER -->
+    <footer id="main-footer">
+        <div class="footer-content">
+            <h2 class="section-title animate-on-scroll" style="text-align: center; margin-bottom: 40px; display: block;">Vamos Conectar</h2>
+            <div class="footer-links animate-on-scroll" data-delay="100">
+                <a href="https://github.com/JV-Klabacher" target="_blank" class="social-link" title="GitHub">
+                    <!-- GitHub SVG Icon -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/jo%C3%A3o-vitor-klabacher-carvalho/" target="_blank" class="social-link" title="LinkedIn">
+                    <!-- LinkedIn SVG Icon -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.85-3.037-1.85 0-2.133 1.445-2.133 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+                </a>
+                <a href="mailto:jv.klabacher@gmail.com" class="social-link" title="Email">
+                    <!-- Email SVG Icon -->
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                </a>
+            </div>
+            
+            <p class="footer-copy">
+                Design e código por <a href="https://github.com/JV-Klabacher" target="_blank">João Vitor K. Carvalho</a>.
+            </p>
+        </div>
+    </footer>
+
+    
+    <!-- 6. JAVASCRIPT -->
+    <script src="assets/index.js"></script>
+</body>
+</html>
