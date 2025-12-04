@@ -2,26 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
 
 interface AppState {
-  theme: 'light' | 'dark';
+  mode: 'day' | 'night' | 'storm';
 }
 
 const initialState: AppState = {
-  theme: 'dark',
+  mode: 'storm',
 };
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
-      state.theme = action.payload;
-    },
-    toggleTheme: state => {
-      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    setMode: (state, action: PayloadAction<'day' | 'night' | 'storm'>) => {
+      state.mode = action.payload;
     },
   },
 });
 
-export const { setTheme, toggleTheme } = appSlice.actions;
-export const selectTheme = (state: RootState) => state.app.theme;
+export const { setMode } = appSlice.actions;
+export const selectTheme = (state: RootState) => state.app.mode;
 export default appSlice.reducer;

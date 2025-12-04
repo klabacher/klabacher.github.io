@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// src/components/animatedBackground.tsx
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Wind, Moon, Sun, CloudRain, Zap, Star, MousePointer2 } from 'lucide-react';
+import { Moon, Sun, Zap } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { store } from '../store/store';
+import { selectTheme, setMode } from '../store/slices/appSlice';
 
 // --- Tipos e Interfaces ---
 type Palette = {
@@ -108,7 +114,13 @@ const generateTrees = (count: number, width: number) => {
 
 export default function App() {
   // set global state with weather mode - Redux
-  const [mode, setMode] = useState<WeatherMode>('day');
+  const dispatch = useDispatch();
+  const setModeInner = (mode: WeatherMode) => {
+    dispatch(setMode(mode));
+  };
+
+  const mode = useSelector(selectTheme);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
   const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
@@ -358,7 +370,7 @@ export default function App() {
       }
 
       // 7. NEBLINA FRONTAL (Overlay final para atmosfera)
-      const fogGrad = ctx.createLinearGradient(0, height * 0.4, 0, height);
+      ctx.createLinearGradient(0, height * 0.4, 0, height);
       // Usar a cor interpolada do fog com opacidade variável
       // Como lerpColor retorna rgb(...), precisamos injetar o alpha manualmente manipulando a string ou usando globalAlpha
       ctx.save();
@@ -386,12 +398,18 @@ export default function App() {
 
   // Hovering controls trigger setState
   const [hovering, setHovering] = useState(false);
+
+  // Redux logic for mode
   return (
     <div
-      className="w-screen h-screen relative bg-gray-500 overflow-hidden"
+      className="w-screen h-screen relative z-0 bg-gray-500 overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       <canvas ref={canvasRef} className="block absolute top-0 left-0" />
+
+      {mode === 'day' && (
+        <div className="absolute inset-0 z-5 pointer-events-none bg-black/20 mix-blend-multiply" />
+      )}
 
       <div
         // Hovering logic
@@ -408,7 +426,7 @@ export default function App() {
             label="Dia"
             sub="Luz do Sol"
             active={mode === 'day'}
-            onClick={() => setMode('day')}
+            onClick={() => setModeInner('day')}
             icon={<Sun size={18} className="text-orange-300" />}
             wide={hovering}
           />
@@ -416,7 +434,7 @@ export default function App() {
             label="Noite"
             sub="Vagalumes"
             active={mode === 'night'}
-            onClick={() => setMode('night')}
+            onClick={() => setModeInner('night')}
             icon={<Moon size={18} className="text-indigo-300" />}
             wide={hovering}
           />
@@ -424,7 +442,7 @@ export default function App() {
             label="Tempestade"
             sub="Chuva Intensa"
             active={mode === 'storm'}
-            onClick={() => setMode('storm')}
+            onClick={() => setModeInner('storm')}
             icon={<Zap size={18} className="text-yellow-300" />}
             wide={hovering}
           />
@@ -554,6 +572,103 @@ function drawPowerLines(
   ctx.bezierCurveTo(poleX + 150, poleTopY + 50, w + 100, poleTopY - 50, w + 200, poleTopY);
   ctx.stroke();
 }
+// Old se der merda
+// function handleParticles(
+//   ctx: CanvasRenderingContext2D,
+//   w: number,
+//   h: number,
+//   state: any,
+//   mode: WeatherMode
+// ) {
+//   // Configuração
+//   const isStorm = mode === 'storm';
+//   const isNight = mode === 'night';
+
+//   if (!isStorm && !isNight) {
+//     state.particles = []; // Limpar se for dia
+//     return;
+//   }
+
+//   // Spawn
+//   if (isStorm) {
+//     if (state.particles.length < 800) {
+//       for (let i = 0; i < 5; i++) {
+//         // Spawnar multiplos por frame
+//         state.particles.push({
+//           x: Math.random() * (w + 400) - 200, // Margem para vento
+//           y: -50,
+//           vx: -3 + Math.random(),
+//           vy: 20 + Math.random() * 10,
+//           life: 100,
+//           type: 'rain',
+//         });
+//       }
+//     }
+//   } else if (isNight) {
+//     if (state.particles.length < 60) {
+//       if (Math.random() > 0.92) {
+//         state.particles.push({
+//           x: Math.random() * w,
+//           y: Math.random() * h * 0.6 + h * 0.4,
+//           vx: (Math.random() - 0.5) * 0.8,
+//           vy: (Math.random() - 0.5) * 0.5,
+//           life: 300 + Math.random() * 200,
+//           type: 'firefly',
+//         });
+//       }
+//     }
+//   }
+
+//   // Update & Draw
+//   const rainColor = 'rgba(200, 220, 255, 0.5)';
+
+//   ctx.lineWidth = 1.5;
+
+//   for (let i = state.particles.length - 1; i >= 0; i--) {
+//     const p = state.particles[i];
+
+//     // Limpeza de tipos errados
+//     if (isStorm && p.type !== 'rain') {
+//       state.particles.splice(i, 1);
+//       continue;
+//     }
+//     if (isNight && p.type !== 'firefly') {
+//       state.particles.splice(i, 1);
+//       continue;
+//     }
+
+//     p.x += p.vx;
+//     p.y += p.vy;
+//     p.life--;
+
+//     if (p.type === 'rain') {
+//       ctx.strokeStyle = rainColor;
+//       ctx.beginPath();
+//       ctx.moveTo(p.x, p.y);
+//       ctx.lineTo(p.x + p.vx * 1.5, p.y + p.vy * 1.5);
+//       ctx.stroke();
+
+//       if (p.y > h || p.life <= 0) {
+//         p.y = -20;
+//         p.x = Math.random() * (w + 400) - 200;
+//       }
+//     } else {
+//       // Vagalume
+//       p.vx += (Math.random() - 0.5) * 0.05;
+//       p.vy += (Math.random() - 0.5) * 0.05;
+
+//       const flicker = Math.abs(Math.sin(state.time * 3 + i));
+//       const alpha = Math.min(1, p.life / 50) * flicker;
+
+//       ctx.fillStyle = `rgba(200, 255, 100, ${alpha})`;
+//       ctx.beginPath();
+//       ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+//       ctx.fill();
+
+//       if (p.life <= 0 || p.x < -50 || p.x > w + 50) state.particles.splice(i, 1);
+//     }
+//   }
+// }
 
 function handleParticles(
   ctx: CanvasRenderingContext2D,
@@ -571,17 +686,17 @@ function handleParticles(
     return;
   }
 
-  // Spawn
+  // Spawn (Criação)
   if (isStorm) {
+    // Aumentei o limite para chuva mais densa, se desejar
     if (state.particles.length < 800) {
       for (let i = 0; i < 5; i++) {
-        // Spawnar multiplos por frame
         state.particles.push({
-          x: Math.random() * (w + 400) - 200, // Margem para vento
+          x: Math.random() * (w + 400) - 200,
           y: -50,
-          vx: -3 + Math.random(),
-          vy: 20 + Math.random() * 10,
-          life: 100,
+          vx: -3 + Math.random(), // Vento leve para esquerda
+          vy: 20 + Math.random() * 10, // Velocidade de queda
+          life: 100, // Duração da gota
           type: 'rain',
         });
       }
@@ -601,15 +716,14 @@ function handleParticles(
     }
   }
 
-  // Update & Draw
+  // Update & Draw (Atualização e Desenho)
   const rainColor = 'rgba(200, 220, 255, 0.5)';
-
   ctx.lineWidth = 1.5;
 
   for (let i = state.particles.length - 1; i >= 0; i--) {
     const p = state.particles[i];
 
-    // Limpeza de tipos errados
+    // Limpeza de partículas do modo errado (ex: chuva no modo noite)
     if (isStorm && p.type !== 'rain') {
       state.particles.splice(i, 1);
       continue;
@@ -619,6 +733,7 @@ function handleParticles(
       continue;
     }
 
+    // Movimento
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
@@ -630,12 +745,15 @@ function handleParticles(
       ctx.lineTo(p.x + p.vx * 1.5, p.y + p.vy * 1.5);
       ctx.stroke();
 
+      // --- CORREÇÃO AQUI ---
+      // Se a gota sair da tela ou acabar a vida, reinicia ela no topo
       if (p.y > h || p.life <= 0) {
         p.y = -20;
         p.x = Math.random() * (w + 400) - 200;
+        p.life = 100; // <--- OBRIGATÓRIO: Reiniciar a vida da gota!
       }
     } else {
-      // Vagalume
+      // Lógica do Vagalume
       p.vx += (Math.random() - 0.5) * 0.05;
       p.vy += (Math.random() - 0.5) * 0.05;
 
@@ -647,7 +765,10 @@ function handleParticles(
       ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
       ctx.fill();
 
-      if (p.life <= 0 || p.x < -50 || p.x > w + 50) state.particles.splice(i, 1);
+      // Vagalumes morrem e somem (não reciclam imediatamente como a chuva)
+      if (p.life <= 0 || p.x < -50 || p.x > w + 50) {
+        state.particles.splice(i, 1);
+      }
     }
   }
 }

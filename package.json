@@ -12,7 +12,6 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}'",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,css,md}'",
-    "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
@@ -30,6 +29,7 @@
     "react-i18next": "^15.4.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
+    "simple-icons": "^16.0.0",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.15.0",
-    "@types/react": "^18.3.20",
+    "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.48.0",
     "@typescript-eslint/parser": "^8.48.0",
