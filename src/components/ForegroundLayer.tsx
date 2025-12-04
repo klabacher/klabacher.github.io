@@ -122,8 +122,7 @@ export default function ForegroundLayer() {
     <div className="flex flex-col justify-between w-full h-full pointer-events-none">
       {/* --- HEADER --- */}
       {/* pointer-events-auto para permitir interação com links e botões do header */}
-      <header className="flex items-center justify-between w-full p-6 pointer-events-auto">
-        {/* Logo */}
+      <header className="fixed top-0 left-0 right-0 flex items-center justify-between w-full p-6 pointer-events-auto z-50">
         <div className="px-4 py-2 font-bold tracking-tighter text-white border rounded-lg bg-white/5 border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.2)]">
           J. KLABACHER
         </div>

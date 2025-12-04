@@ -2,6 +2,7 @@
 import './App.css';
 import AnimatedBackground from './components/AnimatedBackground';
 import ForegroundLayer from './components/ForegroundLayer';
+import WeatherControls from './components/WeatherControls';
 
 function App() {
   return (
@@ -9,15 +10,15 @@ function App() {
     // 2. Adicionamos scroll-smooth para suavizar qualquer link âncora ou scroll via JS
     // 3. snap-y snap-mandatory: Isso cria aquele efeito de "travar" a tela na seção certa (opcional, mas fica premium)
     <div className="relative w-screen h-screen overflow-y-auto overflow-x-hidden bg-gray-900 scroll-smooth snap-y snap-mandatory">
-      {/* BACKGROUND FIXO: Fica parado enquanto o conteúdo rola por cima */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <AnimatedBackground />
       </div>
 
-      {/* SEÇÃO 1: Hero (Ocupa 100vh) */}
-      {/* snap-start faz o scroll "grudar" aqui se o usuário soltar perto */}
+      {/* CONTROLES DE CLIMA (Fixo, acima de tudo) */}
+      <WeatherControls />
+
+      {/* SEÇÃO 1 */}
       <section className="relative w-screen h-screen z-10 pointer-events-none snap-start">
-        {/* Passamos o pointer-events-none para que os cliques atravessem para o background se necessário */}
         <div className="w-full h-full pointer-events-none">
           <ForegroundLayer />
         </div>

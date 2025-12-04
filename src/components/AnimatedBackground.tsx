@@ -2,10 +2,8 @@
 // src/components/animatedBackground.tsx
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Moon, Sun, Zap } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../store/store';
-import { selectTheme, setMode } from '../store/slices/appSlice';
+import { selectTheme } from '../store/slices/appSlice';
+import { useSelector } from 'react-redux';
 
 // --- Tipos e Interfaces ---
 type Palette = {
@@ -114,11 +112,6 @@ const generateTrees = (count: number, width: number) => {
 
 export default function App() {
   // set global state with weather mode - Redux
-  const dispatch = useDispatch();
-  const setModeInner = (mode: WeatherMode) => {
-    dispatch(setMode(mode));
-  };
-
   const mode = useSelector(selectTheme);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -396,9 +389,6 @@ export default function App() {
     });
   };
 
-  // Hovering controls trigger setState
-  const [hovering, setHovering] = useState(false);
-
   // Redux logic for mode
   return (
     <div
@@ -410,44 +400,6 @@ export default function App() {
       {mode === 'day' && (
         <div className="absolute inset-0 z-5 pointer-events-none bg-black/20 mix-blend-multiply" />
       )}
-
-      <div
-        // Hovering logic
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        className={`absolute w-auto h-auto top-1/3 left-2 p-2 rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-10 select-none ${
-          mode === 'day'
-            ? 'bg-black/50 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.2)]'
-            : 'bg-transparent border-transparent hover:bg-white/5'
-        }`}
-      >
-        <div className="space-y-2">
-          <ControlBtn
-            label="Dia"
-            sub="Luz do Sol"
-            active={mode === 'day'}
-            onClick={() => setModeInner('day')}
-            icon={<Sun size={18} className="text-orange-300" />}
-            wide={hovering}
-          />
-          <ControlBtn
-            label="Noite"
-            sub="Vagalumes"
-            active={mode === 'night'}
-            onClick={() => setModeInner('night')}
-            icon={<Moon size={18} className="text-indigo-300" />}
-            wide={hovering}
-          />
-          <ControlBtn
-            label="Tempestade"
-            sub="Chuva Intensa"
-            active={mode === 'storm'}
-            onClick={() => setModeInner('storm')}
-            icon={<Zap size={18} className="text-yellow-300" />}
-            wide={hovering}
-          />
-        </div>
-      </div>
     </div>
   );
 }
