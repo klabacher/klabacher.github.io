@@ -181,6 +181,7 @@ export default function ForegroundLayer() {
       </main>
 
       <div className="absolute bottom-10 w-full flex justify-center pb-4 z-50">
+        {/* <p>MAIS SOBRE</p> */}
         <button
           onClick={handleScrollDown}
           className="group pointer-events-auto p-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md animate-bounce hover:bg-white/10 hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all duration-300"

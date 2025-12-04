@@ -40,19 +40,59 @@ interface AnimState {
   time: number;
 }
 
-// --- Paletas de Cores ---
+// // --- Paletas de Cores Antiga ---
+// const PALETTES: Record<WeatherMode, Palette> = {
+//   day: {
+//     skyTop: '#ff9900',
+//     skyBottom: '#ffcc66',
+//     sun: '#ffddaa',
+//     mountainFar: '#d97f26',
+//     mountainMid: '#bf601a',
+//     mountainClose: '#7a2e12',
+//     ground: '#3d1604',
+//     river: '#ffcc00',
+//     fog: '#ffaa44',
+//     text: 'text-orange-100',
+//   },
+//   night: {
+//     skyTop: '#0a1a2a',
+//     skyBottom: '#1a0b2e',
+//     sun: '#eef2ff',
+//     mountainFar: '#111827',
+//     mountainMid: '#0f172a',
+//     mountainClose: '#020617',
+//     ground: '#000000',
+//     river: '#1e3a8a',
+//     fog: '#051020',
+//     text: 'text-indigo-100',
+//   },
+//   storm: {
+//     skyTop: '#2d2d2d',
+//     skyBottom: '#4a3b2a',
+//     sun: '#4a3b2a',
+//     mountainFar: '#374151',
+//     mountainMid: '#1f2937',
+//     mountainClose: '#111827',
+//     ground: '#0a0a0a',
+//     river: '#57534e',
+//     fog: '#282828',
+//     text: 'text-gray-200',
+//   },
+// };
+
 const PALETTES: Record<WeatherMode, Palette> = {
   day: {
-    skyTop: '#ff9900',
-    skyBottom: '#ffcc66',
-    sun: '#ffddaa',
-    mountainFar: '#d97f26',
-    mountainMid: '#bf601a',
-    mountainClose: '#7a2e12',
-    ground: '#3d1604',
-    river: '#ffcc00',
-    fog: '#ffaa44',
-    text: 'text-orange-100',
+    // Mudamos de Laranja (Quente) para Azul Céu (Frio/Suave)
+    skyTop: '#ff9900', // Azul vibrante mas calmo #3b82f6 - ceu aberto - #ff9900 - final de tarde
+    skyBottom: '#93c5fd', // Azul claro suave perto do horizonte
+    sun: '#ffddaa', // Sol amarelo bem claro (quase branco)
+    mountainFar: '#64748b', // Slate (azulado acinzentado) para profundidade
+    mountainMid: '#475569',
+    mountainClose: '#334155',
+    ground: '#1e293b', // Chão escuro azulado
+    river: '#60a5fa', // Rio refletindo o céu azul
+    fog: '#bfdbfe', // Neblina azulada clara
+    text: 'text-blue-100', // Texto combinando
   },
   night: {
     skyTop: '#0a1a2a',
