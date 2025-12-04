@@ -1,7 +1,7 @@
+// src/components/AnimatedBackground.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/animatedBackground.tsx
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { selectTheme } from '../store/slices/appSlice';
 import { useSelector } from 'react-redux';
 
@@ -15,13 +15,32 @@ type Palette = {
   mountainClose: string;
   ground: string;
   river: string;
-  fog: string; // Hex para consistência na interpolação
+  fog: string;
   text: string;
 };
 
 type WeatherMode = 'day' | 'night' | 'storm';
 
-// --- Paletas de Cores Corrigidas (Tudo Hex para o Lerp funcionar) ---
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  type: 'rain' | 'firefly';
+}
+
+interface AnimState {
+  lerpFactor: number;
+  targetMode: WeatherMode;
+  currentMode: WeatherMode;
+  lastColors: Palette;
+  particles: Particle[];
+  lightningOpacity: number;
+  time: number;
+}
+
+// --- Paletas de Cores ---
 const PALETTES: Record<WeatherMode, Palette> = {
   day: {
     skyTop: '#ff9900',
@@ -32,7 +51,7 @@ const PALETTES: Record<WeatherMode, Palette> = {
     mountainClose: '#7a2e12',
     ground: '#3d1604',
     river: '#ffcc00',
-    fog: '#ffaa44', // Hex
+    fog: '#ffaa44',
     text: 'text-orange-100',
   },
   night: {
@@ -44,26 +63,25 @@ const PALETTES: Record<WeatherMode, Palette> = {
     mountainClose: '#020617',
     ground: '#000000',
     river: '#1e3a8a',
-    fog: '#051020', // Hex
+    fog: '#051020',
     text: 'text-indigo-100',
   },
   storm: {
     skyTop: '#2d2d2d',
     skyBottom: '#4a3b2a',
-    sun: '#4a3b2a', // Cor do céu para "esconder" o sol sem usar rgba inválido
+    sun: '#4a3b2a',
     mountainFar: '#374151',
     mountainMid: '#1f2937',
     mountainClose: '#111827',
     ground: '#0a0a0a',
     river: '#57534e',
-    fog: '#282828', // Hex
+    fog: '#282828',
     text: 'text-gray-200',
   },
 };
 
 // --- Utilitários ---
 const hexToRgb = (hex: string) => {
-  // Fallback para preto se hex for inválido
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -85,14 +103,12 @@ const lerpColor = (a: string, b: string, t: number) => {
 
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-// --- Geração Procedural de Dados Melhorada ---
+// --- Geração Procedural ---
 const generateTerrain = (segments: number, roughness: number) => {
   const points = [];
   let y = 0;
   for (let i = 0; i <= segments; i++) {
-    // Ruído mais agressivo para montanhas visíveis
     y += randomRange(-roughness, roughness);
-    // Soft clamp para manter naturalidade
     if (y > 80) y -= roughness * 2;
     if (y < -80) y += roughness * 2;
     points.push(y);
@@ -102,7 +118,7 @@ const generateTerrain = (segments: number, roughness: number) => {
 
 const generateTrees = (count: number, width: number) => {
   return Array.from({ length: count }).map(() => ({
-    x: randomRange(-200, width + 200), // Espalhar além da tela
+    x: randomRange(-200, width + 200),
     scale: randomRange(0.8, 1.8),
     type: Math.random() > 0.8 ? 'dead' : 'pine',
   }));
@@ -110,13 +126,17 @@ const generateTrees = (count: number, width: number) => {
 
 // --- Componente Principal ---
 
-export default function App() {
-  // set global state with weather mode - Redux
+export default function AnimatedBackground() {
   const mode = useSelector(selectTheme);
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
+
+  // OTIMIZAÇÃO DE PERFORMANCE:
+  // Trocamos useState por useRef para o mouse.
+  // Isso evita re-renderizar o componente inteiro a cada movimento do mouse.
+  const mousePos = useRef({ x: 0.5, y: 0.5 });
+
+  // Otimização: useRef para dimensões evita re-renders desnecessários no resize se não usarmos no JSX
+  const dimensions = useRef({ w: 0, h: 0 });
 
   // Dados persistentes do terreno
   const terrainData = useMemo(
@@ -135,19 +155,12 @@ export default function App() {
   );
 
   // Estado de animação
-  const animState = useRef({
+  const animState = useRef<AnimState>({
     lerpFactor: 0,
-    targetMode: 'day' as WeatherMode,
-    currentMode: 'day' as WeatherMode,
+    targetMode: 'day',
+    currentMode: 'day',
     lastColors: PALETTES.day,
-    particles: [] as {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      life: number;
-      type: 'rain' | 'firefly';
-    }[],
+    particles: [],
     lightningOpacity: 0,
     time: 0,
   });
@@ -159,12 +172,11 @@ export default function App() {
     animState.current.lerpFactor = 0;
   }, [mode]);
 
-  const getCurrentPalette = (state: any) => {
+  const getCurrentPalette = (state: AnimState) => {
     const t = Math.min(state.lerpFactor, 1);
     const start = PALETTES[state.currentMode];
     const end = PALETTES[state.targetMode];
 
-    // Fallback de segurança
     if (!start || !end) return PALETTES.day;
 
     return {
@@ -176,7 +188,7 @@ export default function App() {
       mountainClose: lerpColor(start.mountainClose, end.mountainClose, t),
       ground: lerpColor(start.ground, end.ground, t),
       river: lerpColor(start.river, end.river, t),
-      fog: lerpColor(start.fog, end.fog, t), // Agora interpolamos o fog também
+      fog: lerpColor(start.fog, end.fog, t),
       text: end.text,
     };
   };
@@ -189,7 +201,7 @@ export default function App() {
         const h = window.innerHeight;
         canvasRef.current.width = w;
         canvasRef.current.height = h;
-        setDimensions({ w, h });
+        dimensions.current = { w, h }; // Atualiza ref
       }
     };
     window.addEventListener('resize', handleResize);
@@ -197,26 +209,38 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Event Listener de Mouse (Agora atualiza apenas a REF)
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mousePos.current = {
+      x: e.clientX / window.innerWidth,
+      y: e.clientY / window.innerHeight,
+    };
+  };
+
   // Loop de Renderização
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || dimensions.w === 0) return;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let animationFrameId: number;
 
     const render = () => {
+      // Usa os valores da ref
+      const width = canvas.width;
+      const height = canvas.height;
+      if (width === 0) return; // Evita erro inicial
+
       animState.current.time += 0.01;
       animState.current.lerpFactor += 0.02;
       if (animState.current.lerpFactor > 1) animState.current.lerpFactor = 1;
 
       const palette = getCurrentPalette(animState.current);
-      const width = canvas.width;
-      const height = canvas.height;
 
-      const mx = mousePos.x - 0.5;
-      const my = mousePos.y - 0.5;
+      // Lê a posição do mouse da REF
+      const mx = mousePos.current.x - 0.5;
+      const my = mousePos.current.y - 0.5;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -229,7 +253,6 @@ export default function App() {
 
       // Estrelas
       if (animState.current.targetMode === 'night' || animState.current.currentMode === 'night') {
-        // Opacidade baseada no modo noturno
         const isNightTarget = animState.current.targetMode === 'night';
         const t = animState.current.lerpFactor;
         const starOpacity = isNightTarget ? t : 1 - t;
@@ -250,7 +273,6 @@ export default function App() {
       const sunX = width * 0.5 + mx * 30;
       const sunY = sunYBase + my * 30;
 
-      // Glow do Sol
       ctx.fillStyle = palette.sun;
       if (!isNight && animState.current.targetMode !== 'storm') {
         ctx.shadowBlur = 80;
@@ -267,7 +289,7 @@ export default function App() {
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // 2. MONTANHAS DISTANTES
+      // 2. MONTANHAS
       const offsetFarX = mx * 40;
       const offsetFarY = my * 10;
       drawMountainLayer(
@@ -281,7 +303,7 @@ export default function App() {
         100
       );
 
-      // 3. MONTANHAS MÉDIAS + ÁRVORES
+      // 3. MONTANHAS MÉDIAS
       const offsetMidX = mx * 80;
       const offsetMidY = my * 20;
       const midYBase = height * 0.65 + offsetMidY;
@@ -331,23 +353,12 @@ export default function App() {
       );
       ctx.fill();
 
-      // 5. PRIMEIRO PLANO (Penhasco e Postes)
+      // 5. PRIMEIRO PLANO
       const offsetCloseX = mx * 150;
       const offsetCloseY = my * 40;
-
-      // // Penhasco Esquerdo
-      // ctx.fillStyle = palette.ground;
-      // ctx.beginPath();
-      // ctx.moveTo(-200 - offsetCloseX, height + 100);
-      // ctx.lineTo(-100 - offsetCloseX, height * 0.3 + offsetCloseY);
-      // ctx.lineTo(width * 0.35 - offsetCloseX, height * 0.45 + offsetCloseY);
-      // ctx.lineTo(width * 0.1 - offsetCloseX, height + 100);
-      // ctx.fill();
-
-      // Postes
       drawPowerLines(ctx, width, height, offsetCloseX, offsetCloseY);
 
-      // 6. PARTICULAS
+      // 6. PARTÍCULAS
       handleParticles(ctx, width, height, animState.current, mode);
 
       // Relâmpago
@@ -362,15 +373,10 @@ export default function App() {
         }
       }
 
-      // 7. NEBLINA FRONTAL (Overlay final para atmosfera)
-      ctx.createLinearGradient(0, height * 0.4, 0, height);
-      // Usar a cor interpolada do fog com opacidade variável
-      // Como lerpColor retorna rgb(...), precisamos injetar o alpha manualmente manipulando a string ou usando globalAlpha
+      // 7. NEBLINA
       ctx.save();
       ctx.globalAlpha = mode === 'storm' ? 0.6 : 0.3;
-      ctx.fillStyle = palette.fog; // Agora é uma cor sólida interpolada RGB
-      // Para gradiente com alpha, seria ideal converter, mas vamos usar um truque visual:
-      // Desenhar o rect com GlobalAlpha deve bastar para o efeito "washed out"
+      ctx.fillStyle = palette.fog;
       ctx.fillRect(0, 0, width, height);
       ctx.restore();
 
@@ -380,16 +386,8 @@ export default function App() {
     render();
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [mode, terrainData, mousePos, dimensions]);
+  }, [mode, terrainData]); // Removemos mousePos e dimensions das dependências pois agora são refs
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePos({
-      x: e.clientX / window.innerWidth,
-      y: e.clientY / window.innerHeight,
-    });
-  };
-
-  // Redux logic for mode
   return (
     <div
       className="w-screen h-screen relative z-0 bg-gray-500 overflow-hidden"
@@ -397,14 +395,16 @@ export default function App() {
     >
       <canvas ref={canvasRef} className="block absolute top-0 left-0" />
 
-      {mode === 'day' && (
-        <div className="absolute inset-0 z-5 pointer-events-none bg-black/20 mix-blend-multiply" />
-      )}
+      {/* --- CORREÇÃO DO OVERLAY --- */}
+      {/* 1. Usamos z-10 para garantir que fique acima do Canvas (que é z-auto por padrão) */}
+      {/* 2. Aumentamos a opacidade para bg-black/40 para ser visível contra o sol forte */}
+      {/* 3. pointer-events-none obrigatório para não bloquear o mouseMove do container pai */}
+      {mode === 'day' && <div className="absolute inset-0 z-10 pointer-events-none bg-black/40" />}
     </div>
   );
 }
 
-// --- Funções de Desenho Corrigidas ---
+// --- Funções Auxiliares (Types Updated) ---
 
 function drawMountainLayer(
   ctx: CanvasRenderingContext2D,
@@ -418,25 +418,21 @@ function drawMountainLayer(
 ) {
   ctx.fillStyle = color;
   ctx.beginPath();
-  // Começar do canto inferior esquerdo
   ctx.moveTo(-200, h + 100);
 
-  const totalW = w + 400; // Margem extra para parallax
+  const totalW = w + 400;
   const startX = -200 + offsetX;
 
   for (let i = 0; i < points.length; i++) {
     const x = startX + i * (totalW / (points.length - 1));
-    // Aplicar curva suave
     const y = yBase - points[i] * (scaleY / 50);
 
     if (i === 0) ctx.lineTo(x, y);
     else {
-      // Suavização simples (Bezier quadrático entre pontos) seria ideal, mas linha reta funciona para low-poly style
       ctx.lineTo(x, y);
     }
   }
 
-  // Fechar polígono no canto inferior direito
   ctx.lineTo(w + 200, h + 100);
   ctx.fill();
 }
@@ -455,29 +451,21 @@ function drawTrees(
   const windBase = Math.sin(time * 2);
   const wind = windBase * (isStorm ? 15 : 4);
 
-  // Otimização: desenhar apenas árvores visíveis
-  const visibleTrees = trees.filter(t => {
+  const visibleTrees = trees.filter((t: any) => {
     const x = t.x + offsetX;
     return x > -50 && x < w + 50;
   });
 
-  visibleTrees.forEach(tree => {
+  visibleTrees.forEach((tree: any) => {
     const x = tree.x + offsetX;
-    // Pequena variação na altura Y para não parecerem todos na mesma linha
     const y = yBase + tree.scale * 10;
-
     const h = 40 * tree.scale;
     const wTree = 8 * tree.scale;
 
     ctx.beginPath();
-    // Tronco/Base
     ctx.moveTo(x - wTree, y);
     ctx.lineTo(x + wTree, y);
-
-    // Ponta balançando
-    // Adicionar variação de fase baseada na posição X para o vento não ser uniforme
     const treeWind = wind + Math.sin(time * 3 + x * 0.01) * 3;
-
     ctx.lineTo(x + treeWind, y - h);
     ctx.fill();
   });
@@ -498,7 +486,6 @@ function drawPowerLines(
   const poleBaseY = h + 100;
   const poleTopY = h * 0.4 + offsetY;
 
-  // Poste Principal
   ctx.beginPath();
   ctx.moveTo(poleX - 6, poleBaseY);
   ctx.lineTo(poleX + 6, poleBaseY);
@@ -506,149 +493,45 @@ function drawPowerLines(
   ctx.lineTo(poleX - 3, poleTopY);
   ctx.fill();
 
-  // Travessas
   ctx.fillRect(poleX - 25, poleTopY + 20, 50, 6);
   ctx.fillRect(poleX - 15, poleTopY + 60, 30, 6);
 
-  // Fios
   ctx.beginPath();
   ctx.lineWidth = 1.5;
-  // Fio 1 (Topo esq)
   ctx.moveTo(poleX - 20, poleTopY + 20);
   ctx.bezierCurveTo(poleX - 200, poleTopY + 150, -100, h * 0.6, -200, h * 0.5);
   ctx.stroke();
 
-  // Fio 2 (Topo dir)
   ctx.beginPath();
   ctx.moveTo(poleX + 20, poleTopY + 20);
   ctx.bezierCurveTo(poleX + 150, poleTopY + 50, w + 100, poleTopY - 50, w + 200, poleTopY);
   ctx.stroke();
 }
-// Old se der merda
-// function handleParticles(
-//   ctx: CanvasRenderingContext2D,
-//   w: number,
-//   h: number,
-//   state: any,
-//   mode: WeatherMode
-// ) {
-//   // Configuração
-//   const isStorm = mode === 'storm';
-//   const isNight = mode === 'night';
-
-//   if (!isStorm && !isNight) {
-//     state.particles = []; // Limpar se for dia
-//     return;
-//   }
-
-//   // Spawn
-//   if (isStorm) {
-//     if (state.particles.length < 800) {
-//       for (let i = 0; i < 5; i++) {
-//         // Spawnar multiplos por frame
-//         state.particles.push({
-//           x: Math.random() * (w + 400) - 200, // Margem para vento
-//           y: -50,
-//           vx: -3 + Math.random(),
-//           vy: 20 + Math.random() * 10,
-//           life: 100,
-//           type: 'rain',
-//         });
-//       }
-//     }
-//   } else if (isNight) {
-//     if (state.particles.length < 60) {
-//       if (Math.random() > 0.92) {
-//         state.particles.push({
-//           x: Math.random() * w,
-//           y: Math.random() * h * 0.6 + h * 0.4,
-//           vx: (Math.random() - 0.5) * 0.8,
-//           vy: (Math.random() - 0.5) * 0.5,
-//           life: 300 + Math.random() * 200,
-//           type: 'firefly',
-//         });
-//       }
-//     }
-//   }
-
-//   // Update & Draw
-//   const rainColor = 'rgba(200, 220, 255, 0.5)';
-
-//   ctx.lineWidth = 1.5;
-
-//   for (let i = state.particles.length - 1; i >= 0; i--) {
-//     const p = state.particles[i];
-
-//     // Limpeza de tipos errados
-//     if (isStorm && p.type !== 'rain') {
-//       state.particles.splice(i, 1);
-//       continue;
-//     }
-//     if (isNight && p.type !== 'firefly') {
-//       state.particles.splice(i, 1);
-//       continue;
-//     }
-
-//     p.x += p.vx;
-//     p.y += p.vy;
-//     p.life--;
-
-//     if (p.type === 'rain') {
-//       ctx.strokeStyle = rainColor;
-//       ctx.beginPath();
-//       ctx.moveTo(p.x, p.y);
-//       ctx.lineTo(p.x + p.vx * 1.5, p.y + p.vy * 1.5);
-//       ctx.stroke();
-
-//       if (p.y > h || p.life <= 0) {
-//         p.y = -20;
-//         p.x = Math.random() * (w + 400) - 200;
-//       }
-//     } else {
-//       // Vagalume
-//       p.vx += (Math.random() - 0.5) * 0.05;
-//       p.vy += (Math.random() - 0.5) * 0.05;
-
-//       const flicker = Math.abs(Math.sin(state.time * 3 + i));
-//       const alpha = Math.min(1, p.life / 50) * flicker;
-
-//       ctx.fillStyle = `rgba(200, 255, 100, ${alpha})`;
-//       ctx.beginPath();
-//       ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-//       ctx.fill();
-
-//       if (p.life <= 0 || p.x < -50 || p.x > w + 50) state.particles.splice(i, 1);
-//     }
-//   }
-// }
 
 function handleParticles(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
-  state: any,
+  state: AnimState,
   mode: WeatherMode
 ) {
-  // Configuração
   const isStorm = mode === 'storm';
   const isNight = mode === 'night';
 
   if (!isStorm && !isNight) {
-    state.particles = []; // Limpar se for dia
+    state.particles = [];
     return;
   }
 
-  // Spawn (Criação)
   if (isStorm) {
-    // Aumentei o limite para chuva mais densa, se desejar
     if (state.particles.length < 800) {
       for (let i = 0; i < 5; i++) {
         state.particles.push({
           x: Math.random() * (w + 400) - 200,
           y: -50,
-          vx: -3 + Math.random(), // Vento leve para esquerda
-          vy: 20 + Math.random() * 10, // Velocidade de queda
-          life: 100, // Duração da gota
+          vx: -3 + Math.random(),
+          vy: 20 + Math.random() * 10,
+          life: 100,
           type: 'rain',
         });
       }
@@ -668,14 +551,12 @@ function handleParticles(
     }
   }
 
-  // Update & Draw (Atualização e Desenho)
   const rainColor = 'rgba(200, 220, 255, 0.5)';
   ctx.lineWidth = 1.5;
 
   for (let i = state.particles.length - 1; i >= 0; i--) {
     const p = state.particles[i];
 
-    // Limpeza de partículas do modo errado (ex: chuva no modo noite)
     if (isStorm && p.type !== 'rain') {
       state.particles.splice(i, 1);
       continue;
@@ -685,7 +566,6 @@ function handleParticles(
       continue;
     }
 
-    // Movimento
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
@@ -697,66 +577,21 @@ function handleParticles(
       ctx.lineTo(p.x + p.vx * 1.5, p.y + p.vy * 1.5);
       ctx.stroke();
 
-      // --- CORREÇÃO AQUI ---
-      // Se a gota sair da tela ou acabar a vida, reinicia ela no topo
       if (p.y > h || p.life <= 0) {
         p.y = -20;
         p.x = Math.random() * (w + 400) - 200;
-        p.life = 100; // <--- OBRIGATÓRIO: Reiniciar a vida da gota!
+        p.life = 100;
       }
     } else {
-      // Lógica do Vagalume
       p.vx += (Math.random() - 0.5) * 0.05;
       p.vy += (Math.random() - 0.5) * 0.05;
-
       const flicker = Math.abs(Math.sin(state.time * 3 + i));
       const alpha = Math.min(1, p.life / 50) * flicker;
-
       ctx.fillStyle = `rgba(200, 255, 100, ${alpha})`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
       ctx.fill();
-
-      // Vagalumes morrem e somem (não reciclam imediatamente como a chuva)
-      if (p.life <= 0 || p.x < -50 || p.x > w + 50) {
-        state.particles.splice(i, 1);
-      }
+      if (p.life <= 0 || p.x < -50 || p.x > w + 50) state.particles.splice(i, 1);
     }
   }
-}
-
-function ControlBtn({
-  label,
-  sub,
-  active,
-  onClick,
-  icon,
-  wide = false,
-}: {
-  label?: string;
-  sub?: string;
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  wide: boolean;
-}) {
-  // show sub and label with wide true
-  return (
-    <button
-      onClick={onClick}
-      className={`w-auto p-2 rounded-xl flex items-center gap-2 transition-all duration-500 border ${
-        active
-          ? 'bg-white/10 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.2)]'
-          : 'bg-transparent border-transparent hover:bg-white/5'
-      }`}
-    >
-      <div className={`p-2 rounded-lg ${active ? 'bg-orange-500/20' : 'bg-gray-800'}`}>{icon}</div>
-      {wide && (
-        <div className="text-left">
-          {label && <div className="text-sm font-medium">{label}</div>}
-          {sub && <div className="text-sm text-gray-400">{sub}</div>}
-        </div>
-      )}
-    </button>
-  );
 }

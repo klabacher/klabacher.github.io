@@ -29,23 +29,39 @@ function App() {
         {/* Fundo levemente escurecido para o texto ter leitura sobre o background animado */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
 
-        <div className="max-w-4xl px-6 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6 drop-shadow-lg">Meus Projetos</h2>
-          <p className="text-gray-300 text-lg leading-relaxed mb-8">
-            Aqui você pode colocar a cópia da tela ou o conteúdo da próxima seção. O scroll suave te
-            trouxe até aqui.
-          </p>
+        <div className="flex flex-row gap-10">
+          <div className="max-w-4xl px-6 text-center">
+            <h2 className="text-4xl font-bold text-white mb-6 drop-shadow-lg">Sobre mim:</h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-8">Sobre</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
-              <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto A</h3>
-              <p className="text-gray-400 text-sm">
-                Descrição breve do projeto incrível desenvolvido.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
+                <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto A</h3>
+                <p className="text-gray-400 text-sm">
+                  Descrição breve do projeto incrível desenvolvido.
+                </p>
+              </div>
+              <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
+                <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto B</h3>
+                <p className="text-gray-400 text-sm">Outra solução tecnológica avançada.</p>
+              </div>
             </div>
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
-              <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto B</h3>
-              <p className="text-gray-400 text-sm">Outra solução tecnológica avançada.</p>
+          </div>
+          <div className="max-w-4xl px-6 text-center">
+            <h2 className="text-4xl font-bold text-white mb-6 drop-shadow-lg">Meus Projetos</h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-8">WIP</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
+                <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto A</h3>
+                <p className="text-gray-400 text-sm">
+                  Descrição breve do projeto incrível desenvolvido.
+                </p>
+              </div>
+              <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
+                <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto B</h3>
+                <p className="text-gray-400 text-sm">Outra solução tecnológica avançada.</p>
+              </div>
             </div>
           </div>
         </div>
