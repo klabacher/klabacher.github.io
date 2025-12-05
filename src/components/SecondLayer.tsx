@@ -17,7 +17,7 @@ import {
   SiJest,
   SiNumpy,
 } from '@icons-pack/react-simple-icons';
-import IconR, { SmallIcon } from './IconMagic';
+import IconR, { TechTag } from './IconMagic';
 
 import React, { useState } from 'react';
 import ProjectModal, { ProjectData } from './ProjectModal';
@@ -37,9 +37,10 @@ function AboutMe() {
           </h3>
           <hr className="border-white/10 mb-4" />
 
-          <p className="text-gray-400 text-sm">
-            Desenvolvedor Fullstack <span></span>
-          </p>
+          <p className="text-gray-400 text-sm">Localização: São Paulo, Brasil</p>
+          <p className="text-gray-400 text-sm">Formação: Cursando psicologia - 6 Semestre</p>
+          <p className="text-gray-400 text-sm">Trabalho: https://www.instagram.com/oficial.tmb/</p>
+          <p className="text-gray-400 text-sm">Localização: São Paulo, Brasil</p>
         </div>
         <div className="p-6 bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
           <p>Em desenvolvimento</p>
@@ -92,18 +93,16 @@ function Projects() {
               <p className="text-gray-400 text-sm mb-4">{project.shortDescription}</p>
 
               {/* Preview das tecnologias */}
-              <div className="flex flex-wrap gap-2 mt-auto opacity-60 group-hover:opacity-100 transition-opacity">
+              <div className="flex flex-wrap gap-2 mt-auto opacity-80 group-hover:opacity-100 transition-opacity">
                 {project.techStack.slice(0, 3).map(tech => (
-                  <span
-                    key={tech.name}
-                    className="text-[10px] border border-white/20 px-2 py-0.5 rounded text-gray-300"
-                  >
-                    <SmallIcon name={tech.name} icon={tech.icon} size={48} />
-                    {tech.name}
-                  </span>
+                  // 2. Substitua o span antigo pelo TechTag
+                  <TechTag key={tech.name} name={tech.name} icon={tech.icon} />
                 ))}
+
                 {project.techStack.length > 3 && (
-                  <span className="text-[10px] text-gray-500">...</span>
+                  <span className="text-[10px] text-gray-500 self-center pl-1">
+                    +{project.techStack.length - 3}
+                  </span>
                 )}
               </div>
             </div>
