@@ -40,7 +40,7 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
   const FirstIcon = safeComponent[0].icon;
 
   return (
-    <div className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/80 hover:border-white/10 hover:-translate-y-1 h-full min-h-[160px]">
+    <div className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/80 hover:border-white/10 hover:-translate-y-1 h-full min-h-40">
       {/* --- Área Principal --- */}
       <div className="flex flex-col items-center grow justify-center w-full mb-2">
         {safeComponent.length === 1 ? (

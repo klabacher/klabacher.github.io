@@ -15,6 +15,7 @@ import {
   SiGit,
   SiVitest,
   SiJest,
+  SiNumpy,
 } from '@icons-pack/react-simple-icons';
 import Icon from './IconMagic';
 
@@ -82,6 +83,7 @@ export function TechStack() {
           subStack={[
             { icon: SiLanggraph, name: 'Langgraph' },
             { icon: SiPandas, name: 'Pandas' },
+            { icon: SiNumpy, name: 'NumPy' },
             { icon: SiOpenai, name: 'OpenAI' },
             { icon: SiGooglegemini, name: 'Google Gemini' },
           ]}
