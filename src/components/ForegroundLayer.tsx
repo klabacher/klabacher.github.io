@@ -1,8 +1,8 @@
 // src/components/ForegroundLayer.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Github,
-  Mail,
+  // Mail,
   Code2, // Novo ícone para Fullstack
   Sparkles, // Novo ícone para Soluções
   BrainCircuit,
@@ -53,6 +53,54 @@ function SocialLink({ icon, href }: { icon: React.ReactNode; href: string }) {
     </a>
   );
 }
+
+// const useTypewriter = (words = ['default'], typingSpeed = 150, deletingSpeed = 100) => {
+//   const [text, setText] = useState('');
+//   const [isDeleting, setIsDeleting] = useState(false);
+//   const [loopNum, setLoopNum] = useState(0);
+//   const [typingSpeedState, setTypingSpeedState] = useState(typingSpeed);
+
+//   useEffect(() => {
+//     const i = loopNum % words.length;
+//     const fullText = words[i];
+
+//     const handleType = () => {
+//       setText(
+//         isDeleting ? fullText.substring(0, text.length - 1) : fullText.substring(0, text.length + 1)
+//       );
+
+//       setTypingSpeedState(isDeleting ? deletingSpeed : typingSpeed);
+
+//       if (!isDeleting && text === fullText) {
+//         setTimeout(() => setIsDeleting(true), 40000); // Pausa antes de apagar
+//       } else if (isDeleting && text === '') {
+//         setIsDeleting(false);
+//         setLoopNum(loopNum + 1);
+//       }
+//     };
+
+//     const timer = setTimeout(handleType, typingSpeedState);
+//     return () => clearTimeout(timer);
+//   }, [text, isDeleting, loopNum, words, typingSpeed, deletingSpeed, typingSpeedState]);
+
+//   return text;
+// };
+
+const useTypewriterOnce = (text, speed = 150) => {
+  const [displayText, setDisplayText] = useState('');
+
+  useEffect(() => {
+    // Só continua agendando a próxima letra se ainda não terminou
+    if (displayText.length < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(text.slice(0, displayText.length + 1));
+      }, speed);
+      return () => clearTimeout(timeout);
+    }
+  }, [displayText, text, speed]);
+
+  return displayText;
+};
 
 export default function ForegroundLayer() {
   // Usamos useRef para acessar o elemento DOM diretamente e aplicar transformações
@@ -117,6 +165,8 @@ export default function ForegroundLayer() {
     };
   }, [INTENSITY]);
 
+  const typingSurname = useTypewriterOnce('KLABACHER', 200);
+
   return (
     // Container principal com pointer-events-none para deixar clicar no fundo
     <div className="flex flex-col justify-between w-full h-full pointer-events-none">
@@ -156,24 +206,23 @@ export default function ForegroundLayer() {
               <span className="tracking-[0.25em] text-lg text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg">
                 JOÃO VITOR
               </span>
-              <span className="tracking-[0.25em] text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg">
-                KLABACHER
-              </span>
+              {/* tracking-[0.25em] text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg */}
+              <div className="flex items-center justify-center h-[1.2em]">
+                <span className="cursor-blink tracking-[0.25em] border-r-2 border-orange-500 text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg">
+                  {typingSurname}
+                </span>
+              </div>
             </h1>
 
             <p className="mt-5 text-sm font-medium tracking-[0.4em] text-orange-300/80 uppercase border-t border-orange-500/30 pt-4 mx-10">
               Fullstack Developer
             </p>
-            {/* Hero section */}
-            {/* NOVA SEÇÃO DE HERO (Substituindo o antigo parágrafo) */}
+
             <section className="flex flex-wrap justify-center gap-8 mt-12 border-t border-white/10 pt-8 px-10 backdrop-blur-[2px]">
-              {/* Item 1: Fullstack */}
               <SkillItem icon={<Code2 size={20} />} label="Fullstack" value="Developer" />
 
-              {/* Item 2: Soluções */}
               <SkillItem icon={<Sparkles size={20} />} label="Soluções" value="Inteligentes" />
 
-              {/* Item 3: IA */}
               <SkillItem icon={<BrainCircuit size={20} />} label="I.A." value="Aplicada" />
             </section>
           </div>
