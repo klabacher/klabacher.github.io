@@ -26,7 +26,10 @@ function App() {
       </section>
 
       {/* SEÇÃO 2: Projetos / Sobre (Ocupa 100vh) */}
-      <section className="relative w-screen h-screen z-10 flex items-center justify-center snap-start pointer-events-auto">
+      <section
+        id="about"
+        className="relative w-screen h-screen z-10 flex items-center justify-center snap-start pointer-events-auto"
+      >
         {/* Fundo levemente escurecido para o texto ter leitura sobre o background animado */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
 

@@ -54,39 +54,7 @@ function SocialLink({ icon, href }: { icon: React.ReactNode; href: string }) {
   );
 }
 
-// const useTypewriter = (words = ['default'], typingSpeed = 150, deletingSpeed = 100) => {
-//   const [text, setText] = useState('');
-//   const [isDeleting, setIsDeleting] = useState(false);
-//   const [loopNum, setLoopNum] = useState(0);
-//   const [typingSpeedState, setTypingSpeedState] = useState(typingSpeed);
-
-//   useEffect(() => {
-//     const i = loopNum % words.length;
-//     const fullText = words[i];
-
-//     const handleType = () => {
-//       setText(
-//         isDeleting ? fullText.substring(0, text.length - 1) : fullText.substring(0, text.length + 1)
-//       );
-
-//       setTypingSpeedState(isDeleting ? deletingSpeed : typingSpeed);
-
-//       if (!isDeleting && text === fullText) {
-//         setTimeout(() => setIsDeleting(true), 40000); // Pausa antes de apagar
-//       } else if (isDeleting && text === '') {
-//         setIsDeleting(false);
-//         setLoopNum(loopNum + 1);
-//       }
-//     };
-
-//     const timer = setTimeout(handleType, typingSpeedState);
-//     return () => clearTimeout(timer);
-//   }, [text, isDeleting, loopNum, words, typingSpeed, deletingSpeed, typingSpeedState]);
-
-//   return text;
-// };
-
-const useTypewriterOnce = (text, speed = 150) => {
+const useTypewriterOnce = (text: string, speed = 150) => {
   const [displayText, setDisplayText] = useState('');
 
   useEffect(() => {
@@ -119,10 +87,14 @@ export default function ForegroundLayer() {
   const INTENSITY = -30;
 
   const handleScrollDown = () => {
-    window.scrollTo({
-      top: window.innerHeight, // Rola exatamente 1 tela para baixo
-      behavior: 'smooth', // Garante a suavidade nativa
-    });
+    const nextSection = document.getElementById('about');
+
+    if (nextSection) {
+      nextSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
   };
 
   useEffect(() => {
