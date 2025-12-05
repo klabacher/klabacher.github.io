@@ -15,7 +15,6 @@ import {
   SiGit,
   SiVitest,
   SiJest,
-  SiJestHex,
 } from '@icons-pack/react-simple-icons';
 import Icon from './IconMagic';
 
@@ -41,7 +40,7 @@ function AboutMe() {
         <div className="p-6 bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
           <p>Em desenvolvimento</p>
           <div className="grid grid-cols-3">
-            <Icon component={[{ icon: SiDevbox, name: 'Devbox' }]} size={48} />
+            <Icon component={[{ icon: SiDevbox, name: 'Devbox' }]} size={12} />
           </div>
         </div>
       </div>
