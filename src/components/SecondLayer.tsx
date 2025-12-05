@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   SiReact,
   SiVite,
@@ -9,7 +8,16 @@ import {
   SiPython,
   SiPandas,
   SiDevbox,
+  SiLanggraph,
+  SiOpenai,
+  SiGooglegemini,
+  SiDocker,
+  SiGit,
+  SiVitest,
+  SiJest,
+  SiJestHex,
 } from '@icons-pack/react-simple-icons';
+import Icon from './IconMagic';
 
 function AboutMe() {
   return (
@@ -26,12 +34,15 @@ function AboutMe() {
           <hr className="border-white/10 mb-4" />
 
           <p className="text-gray-400 text-sm">
-            Nasciso em fevereiro de 2005, tenho 20 anos. Apaixonado por Tecnologia
+            Olá! Sou um desenvolvedor front-end apaixonado por criar experiências digitais
+            envolventes e funcionais.
           </p>
         </div>
         <div className="p-6 bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer">
-          <h3 className="text-xl font-bold text-orange-400 mb-2">Projeto B</h3>
-          <p className="text-gray-400 text-sm">Outra solução tecnológica avançada.</p>
+          <p>Em desenvolvimento</p>
+          <div className="grid grid-cols-3">
+            <Icon component={[{ icon: SiDevbox, name: 'Devbox' }]} size={48} />
+          </div>
         </div>
       </div>
     </div>
@@ -62,47 +73,47 @@ function Projects() {
 
 export function TechStack() {
   return (
-    <div className="max-w-4xl px-6 justify-center text-center">
+    <div className="max-w-2xl px-6 justify-center text-center">
       <h2 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Tech Stack</h2>
 
-      <div className="grid grid-cols-1 gap-6 items-center text-center">
-        <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-          <SiTypescript size={48} className="mx-auto mb-2" />
-          <p className="text-gray-400 text-sm">TypeScript</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-1.5">
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiPython size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">Python</p>
-          </div>
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiPandas size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">Pandas</p>
-          </div>
-        </div>
-        <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-          <SiReact size={48} className="mx-auto mb-2" />
-          <p className="text-gray-400 text-sm">React</p>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiVite size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">Vite</p>
-          </div>
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiRedux size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">Redux</p>
-          </div>
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiTailwindcss size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">Tailwind CSS</p>
-          </div>
-          <div className="p-3 size-auto justify-center rounded-md text-white border border-white/10 shadow-2xl font-sans transition-all z-50 ">
-            <SiReactrouter size={48} className="mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">React Router</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-4 items-center text-center">
+        <Icon
+          component={[{ icon: SiPython, name: 'Python' }]}
+          size={'big'}
+          subStack={[
+            { icon: SiLanggraph, name: 'Langgraph' },
+            { icon: SiPandas, name: 'Pandas' },
+            { icon: SiOpenai, name: 'OpenAI' },
+            { icon: SiGooglegemini, name: 'Google Gemini' },
+          ]}
+          text="Backend & Ciência de Dados/IA"
+        />
+        <Icon
+          component={[
+            { icon: SiReact, name: 'React' },
+            { icon: SiTypescript, name: 'TypeScript' },
+          ]}
+          size={'big'}
+          text="Frontend Responsivo"
+          subStack={[
+            { icon: SiVite, name: 'Vite' },
+            { icon: SiRedux, name: 'Redux' },
+            { icon: SiTailwindcss, name: 'Tailwind CSS' },
+            { icon: SiReactrouter, name: 'React Router' },
+          ]}
+        />
+        <Icon
+          component={[
+            { icon: SiDocker, name: 'Docker' },
+            { icon: SiGit, name: 'Git' },
+          ]}
+          size={'big'}
+          text="CI/CD & Versionamento"
+          subStack={[
+            { icon: SiVitest, name: 'Vitest' },
+            { icon: SiJest, name: 'Jest' },
+          ]}
+        />
       </div>
     </div>
   );
