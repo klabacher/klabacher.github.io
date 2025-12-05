@@ -117,4 +117,26 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
   );
 }
 
+function SmallIcon({
+  icon: Icon,
+  size,
+  name,
+}: {
+  icon: React.ElementType;
+  size: number;
+  name: string;
+}) {
+  return (
+    <div className="mt-3 pt-3 border-t border-white/5 w-full flex flex-col items-center">
+      <div className="flex flex-wrap justify-center gap-2">
+        <div className="group relative flex items-center justify-center p-2 rounded-lg bg-white/5 border border-transparent hover:border-white/10 hover:bg-white/10 transition-all duration-200 cursor-help">
+          <Tooltip text={name} />
+          <Icon size={size} className="text-zinc-500 group-hover:text-zinc-200 transition-colors" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default IconMagic;
+export { SmallIcon, Tooltip };
