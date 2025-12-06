@@ -28,6 +28,9 @@ const PROJECTS_DATA: ProjectData[] = [
 
         Com o CountSparks, o usuário pode criar contadores personalizados via dashboard, escolher entre varias opções de visualização e integrar facilmente via API ou embed code.
         
+        **Foco na leveza e simplicidade:**
+        - Sistema funciona direto na web e API simplificada com Supabase.
+
         **Principais Desafios:**
         - Ser simples e leve para integrar em qualquer site.
         - Oferecer personalização sem complicar a UX.

@@ -12,7 +12,7 @@ export interface ProjectImage {
 
 export interface techInfo {
   name: string;
-  icon: IconType;
+  icon: IconType; // manter assim para compatibilidade com react-simple-icons
 }
 
 export interface ProjectData {
@@ -37,32 +37,32 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false); // Novo estado para Full Screen
+  const [isFullScreen, setIsFullScreen] = useState(false); // Estado para Full Screen
 
   // Controla animação de entrada/saída
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
-      setTimeout(() => setIsAnimating(true), 10); // Pequeno delay para permitir renderização
-      document.body.style.overflow = 'hidden'; // Bloqueia scroll da página
+      setTimeout(() => setIsAnimating(true), 10);
+      document.body.style.overflow = 'hidden';
     } else {
       setIsAnimating(false);
-      const timer = setTimeout(() => setIsVisible(false), 300); // Espera animação acabar
-      document.body.style.overflow = 'unset'; // Libera scroll
+      const timer = setTimeout(() => setIsVisible(false), 300);
+      document.body.style.overflow = 'unset';
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
-  // Resetar estados internos quando mudar de projeto
+  // Resetar estados internos
   useEffect(() => {
     if (project) {
       setCurrentImageIndex(0);
       setIsDescriptionExpanded(false);
-      setIsFullScreen(false); // Garante que começa fechado
+      setIsFullScreen(false);
     }
   }, [project]);
 
-  // Fechar com ESC (Atualizado para fechar FullScreen primeiro)
+  // Fechar com ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -83,12 +83,12 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
   return (
     <>
-      {/* --- Overlay (Fundo Escuro do Modal Principal) --- */}
+      {/* --- Overlay Principal --- */}
       <div
         className={`fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ease-out ${
           isAnimating ? 'backdrop-blur-md bg-black/80' : 'backdrop-blur-none bg-black/0'
         }`}
-        onClick={onClose} // Clicar fora fecha
+        onClick={onClose}
       >
         {/* --- Container do Modal --- */}
         <div
@@ -97,7 +97,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               ? 'scale-100 opacity-100 translate-y-0'
               : 'scale-90 opacity-0 translate-y-10'
           }`}
-          onClick={e => e.stopPropagation()} // Impede que clique dentro feche o modal
+          onClick={e => e.stopPropagation()}
         >
           {/* Header Fixo com Botão Fechar */}
           <div className="absolute top-4 right-4 z-20">
@@ -110,11 +110,21 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           </div>
 
           {/* --- Conteúdo com Scroll --- */}
-          <div className="overflow-y-auto custom-scrollbar flex-1">
+          <div
+            className={`
+              overflow-y-auto flex-1
+              /* Estilização da Scrollbar Principal */
+              [&::-webkit-scrollbar]:w-2
+              [&::-webkit-scrollbar-track]:bg-[#0f0f0f]
+              [&::-webkit-scrollbar-thumb]:bg-white/10
+              [&::-webkit-scrollbar-thumb]:rounded-full
+              [&::-webkit-scrollbar-thumb]:hover:bg-orange-500/30
+              [&::-webkit-scrollbar-thumb]:transition-colors
+            `}
+          >
             <div className="grid grid-cols-1 lg:grid-cols-12 min-h-full">
-              {/* --- COLUNA DA ESQUERDA: GALERIA (lg:col-span-7) --- */}
+              {/* --- COLUNA DA ESQUERDA: GALERIA --- */}
               <div className="lg:col-span-7 bg-black/20 p-6 lg:p-10 flex flex-col justify-center">
-                {/* Imagem Principal */}
                 <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 shadow-lg group bg-[#0a0a0a]">
                   <img
                     src={currentImage?.url}
@@ -122,7 +132,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
 
-                  {/* Botão de Maximizar (Novo) */}
+                  {/* Botão de Maximizar */}
                   <button
                     onClick={e => {
                       e.stopPropagation();
@@ -134,7 +144,6 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                     <Maximize2 size={20} />
                   </button>
 
-                  {/* Overlay da legenda da imagem */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/90 via-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none">
                     <h4 className="text-white font-bold text-lg">{currentImage?.title}</h4>
                     <p className="text-gray-300 text-sm line-clamp-2">
@@ -143,7 +152,6 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   </div>
                 </div>
 
-                {/* Thumbnails (Só mostra se tiver mais de 1 imagem) */}
                 {project.images.length > 1 && (
                   <div className="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide">
                     {project.images.map((img, index) => (
@@ -163,9 +171,8 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                 )}
               </div>
 
-              {/* --- COLUNA DA DIREITA: DETALHES (lg:col-span-5) --- */}
+              {/* --- COLUNA DA DIREITA: DETALHES --- */}
               <div className="lg:col-span-5 p-8 lg:p-10 bg-[#141414] flex flex-col border-l border-white/5">
-                {/* Título e Short Description */}
                 <div className="mb-6">
                   <h2 className="text-3xl font-bold text-white mb-2 leading-tight">
                     {project.title}
@@ -175,20 +182,18 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   </p>
                 </div>
 
-                {/* Tech Stack Tags */}
                 <div className="flex flex-wrap gap-2 mb-8">
                   {project.techStack.map(tech => (
                     <span
                       key={tech.name}
                       className="px-3 py-1 text-xs text-center font-semibold uppercase tracking-wider text-orange-300 bg-orange-500/10 border border-orange-500/20 rounded-full"
                     >
-                      <SmallIcon name={tech.name} icon={tech.icon} size={24} />
-                      {tech.name}
+                      <SmallIcon name={tech.name} icon={tech.icon} size={14} />
+                      <span className="ml-1.5">{tech.name}</span>
                     </span>
                   ))}
                 </div>
 
-                {/* Botões de Ação */}
                 <div className="flex gap-4 mb-8">
                   {project.githubUrl && (
                     <a
@@ -219,23 +224,35 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
                 <div className="w-full h-px bg-white/10 mb-6"></div>
 
-                {/* Descrição Expansível */}
-                <div className="relative">
-                  <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                {/* --- Descrição Expansível Melhorada --- */}
+                <div className="relative flex-1 flex flex-col min-h-0">
+                  <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-sm uppercase tracking-wider opacity-90">
                     <Maximize2 size={16} className="text-orange-500" />
                     Detalhes do Projeto
                   </h3>
 
                   <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out relative ${
-                      isDescriptionExpanded ? 'max-h-[500px] opacity-100' : 'max-h-24 opacity-80'
-                    }`}
+                    className={`
+                      relative transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]
+                      ${
+                        isDescriptionExpanded
+                          ? 'max-h-[40vh] overflow-y-auto pr-3 opacity-100' // Padding para não colar na scrollbar
+                          : 'max-h-24 overflow-hidden opacity-70'
+                      }
+                      /* Scrollbar Estilizada */
+                      [&::-webkit-scrollbar]:w-1.5
+                      [&::-webkit-scrollbar-track]:bg-white/5
+                      [&::-webkit-scrollbar-track]:rounded-full
+                      [&::-webkit-scrollbar-thumb]:bg-orange-500/20
+                      [&::-webkit-scrollbar-thumb]:rounded-full
+                      [&::-webkit-scrollbar-thumb]:hover:bg-orange-500/40
+                    `}
                   >
-                    <p className="text-gray-300 leading-7 whitespace-pre-line text-sm">
+                    <p className="text-gray-300 leading-relaxed whitespace-pre-line text-sm font-light text-justify">
                       {project.fullDescription}
                     </p>
 
-                    {/* Gradiente para esconder texto quando fechado */}
+                    {/* Gradiente de Fade */}
                     {!isDescriptionExpanded && (
                       <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-[#141414] to-transparent pointer-events-none" />
                     )}
@@ -243,15 +260,23 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
                   <button
                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className="mt-2 text-sm font-medium text-orange-400 hover:text-orange-300 flex items-center gap-1 transition-colors outline-none"
+                    className="mt-4 self-start text-[10px] uppercase tracking-widest font-bold text-orange-400 hover:text-orange-300 flex items-center gap-2 transition-all hover:gap-3 outline-none group/btn"
                   >
                     {isDescriptionExpanded ? (
                       <>
-                        <ChevronUp size={16} /> Ler menos
+                        Ler menos{' '}
+                        <ChevronUp
+                          size={14}
+                          className="group-hover/btn:-translate-y-0.5 transition-transform"
+                        />
                       </>
                     ) : (
                       <>
-                        <ChevronDown size={16} /> Ler mais
+                        Ler mais{' '}
+                        <ChevronDown
+                          size={14}
+                          className="group-hover/btn:translate-y-0.5 transition-transform"
+                        />
                       </>
                     )}
                   </button>
@@ -262,13 +287,12 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
         </div>
       </div>
 
-      {/* --- Full Screen Image Overlay --- */}
+      {/* --- Full Screen Overlay --- */}
       {isFullScreen && (
         <div
           className="fixed inset-0 z-10000 bg-black/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-300"
           onClick={() => setIsFullScreen(false)}
         >
-          {/* Botão Fechar do FullScreen */}
           <button
             onClick={() => setIsFullScreen(false)}
             className="absolute top-6 right-6 p-3 bg-white/10 border border-white/10 hover:bg-white/20 text-white rounded-full transition-all z-50 hover:rotate-90 hover:scale-110"
@@ -276,33 +300,26 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
             <X size={32} />
           </button>
 
-          {/* Container da Imagem Centralizada */}
           <div className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-hidden">
             <img
               src={currentImage?.url}
               alt={currentImage?.title}
               className="max-w-full max-h-full object-contain shadow-2xl rounded-sm transition-transform duration-300"
-              onClick={e => e.stopPropagation()} // Permite clicar na imagem sem fechar? (Opcional, removi para consistência com bg)
+              onClick={e => e.stopPropagation()}
             />
           </div>
 
-          {/* Footer com Informações */}
           <div
-            className="w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-12 pb-10 px-6 text-center"
+            className="w-full bg-linear-to-t from-black via-black/90 to-transparent pt-12 pb-10 px-6 text-center"
             onClick={e => e.stopPropagation()}
           >
             <div className="max-w-5xl mx-auto">
-              {/* Nome do Projeto */}
               <h3 className="text-orange-500 font-bold text-sm tracking-[0.25em] uppercase mb-3 opacity-90">
                 {project.title}
               </h3>
-
-              {/* Título da Imagem */}
               <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
                 {currentImage?.title}
               </h2>
-
-              {/* Descrição da Imagem */}
               <p className="text-gray-300 text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-light">
                 {currentImage?.description}
               </p>
