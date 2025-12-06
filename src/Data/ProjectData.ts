@@ -1,64 +1,79 @@
 import { ProjectData } from '../components/ProjectModal';
 
+import CountsparkDash from '@assets/countsparks/dashboard.png';
+import CountsparkFront from '@assets/countsparks/frontpage.png';
+import CountsparkLogin from '@assets/countsparks/login.png';
+import CountsparkEmail from '@assets/countsparks/checagemdeemail.png';
+import CountsparkFinal from '@assets/countsparks/final.png';
+
 // Importar icones das tecnologias
-import { SiReact, SiPython, SiPandas, SiLangchain, SiOpenai } from '@icons-pack/react-simple-icons';
+import {
+  SiReact,
+  SiReactrouter,
+  SiRedux,
+  SiTailwindcss,
+  SiTypescript,
+  SiVite,
+  SiVitest,
+} from '@icons-pack/react-simple-icons';
 const PROJECTS_DATA: ProjectData[] = [
   {
-    id: 'proj-1',
-    title: 'Plataforma Analytics Pro',
-    shortDescription: 'Dashboard completo para análise de dados em tempo real com IA.',
+    id: 'CountSparks',
+    title: 'CountSparks - Contadores simplificados',
+    shortDescription:
+      'Dashboard completo para criação/monitoramento e facil integração de contadores web.',
     fullDescription: `
-        Este projeto foi desenvolvido para resolver um problema crítico de visualização de dados em grandes volumes.
+        Este projeto foi desenvolvido para criar uma alternativa rapida, leve e personalizável aos tradicionais codigos de contadores.
+        O mesmo codigo, feito repetidas vezes em JS, era pesado e dificil de integrar com outras plataformas.
+
+        Com o CountSparks, o usuário pode criar contadores personalizados via dashboard, escolher entre varias opções de visualização e integrar facilmente via API ou embed code.
         
         **Principais Desafios:**
-        - Processar 1 milhão de linhas em menos de 2 segundos.
-        - Criar gráficos interativos que não travassem o navegador.
-        - Integrar previsões de IA diretamente nos gráficos.
+        - Ser simples e leve para integrar em qualquer site.
+        - Oferecer personalização sem complicar a UX.
+        - Construir um backend robusto para gerenciar milhares de contadores.
+        - Criar customizações visuais dinâmicas e responsivas sem comprometer a performance.
   
-        **Solução:**
-        Utilizei Python (Pandas) no backend para pré-processamento pesado e enviei apenas o JSON otimizado para o React. No frontend, usei bibliotecas de canvas para renderização de alta performance.
+        **Solução: (Em progresso)**
+        - Centralizar a criação e gestão dos contadores em um dashboard intuitivo e facilitar a exportação/managment.
       `,
     techStack: [
       { name: 'React', icon: SiReact },
-      { name: 'Python', icon: SiPython },
-      { name: 'Pandas', icon: SiPandas },
-      { name: 'LangChain', icon: SiLangchain },
+      { name: 'TypeScript', icon: SiTypescript },
+      { name: 'TailwindCSS', icon: SiTailwindcss },
+      { name: 'Vite', icon: SiVite },
+      { name: 'ViTest', icon: SiVitest },
+      { name: 'Redux', icon: SiRedux },
+      { name: 'React Router', icon: SiReactrouter },
     ],
-    githubUrl: 'https://github.com/seusite/projeto',
-    liveUrl: 'https://projeto-demo.com',
+    githubUrl: 'https://github.com/klabacher/CountSparks',
+    liveUrl: 'https://klabacher.github.io/CountSparks/',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
+        url: CountsparkDash,
         title: 'Dashboard Principal',
-        description: 'Visão geral com gráficos de performance em tempo real.',
+        description: 'Visão geral para manutenção e criação de contadores.',
       },
       {
-        url: 'https://images.unsplash.com/photo-1543286386-713df548e9cc?q=80&w=1000&auto=format&fit=crop',
-        title: 'Painel de Configuração',
-        description: 'Onde o usuário define os parâmetros da IA.',
+        url: CountsparkFront,
+        title: 'Pagina Inicial',
+        description: 'Pagina inicial do projeto',
       },
-    ],
-  },
-  {
-    id: 'proj-2',
-    title: 'Automação RAG com IA',
-    shortDescription: 'Sistema inteligente de leitura de PDFs e resposta contextual.',
-    fullDescription: `
-        Uma solução end-to-end para empresas que precisam consultar milhares de documentos PDF internos.
-        O sistema indexa tudo em um banco vetorial e usa LLMs para responder perguntas.
-      `,
-    techStack: [
-      { name: 'Python', icon: SiPython },
-      { name: 'Langgraph', icon: SiLangchain },
-      { name: 'Pandas', icon: SiPandas },
-      { name: 'OpenAI', icon: SiOpenai },
-    ],
-    githubUrl: 'https://github.com/seusite/rag',
-    images: [
       {
-        url: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop',
-        title: 'Interface de Chat',
-        description: 'O usuário conversa naturalmente com os documentos.',
+        url: CountsparkLogin,
+        title: 'Tela de Login',
+        description: 'Sistema de autenticação via JWT e OAuth usando Supabase.',
+      },
+      {
+        url: CountsparkEmail,
+        title: 'Verificação de Email',
+        description: 'Fluxo de verificação de email para novos usuários usando Supabase.',
+      },
+      {
+        url: CountsparkFinal,
+        title: 'Dashboard do Contador',
+        description:
+          'Visualização final do contador integrado em um site. Muito trabalho pelo frente ainda! :D ',
       },
     ],
   },
