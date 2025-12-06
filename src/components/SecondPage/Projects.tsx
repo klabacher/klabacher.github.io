@@ -1,20 +1,25 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux'; // Importar dispatch
+import { setModalOpen } from '../../store/slices/appSlice'; // Importar a ação
 import PROJECTS_DATA from '../../Data/ProjectData';
 import { TechTag } from '../IconMagic';
 import ProjectModal, { ProjectData } from '../ProjectModal';
 
 export default function Projects() {
+  const dispatch = useDispatch(); // Hook
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenProject = (project: ProjectData) => {
     setSelectedProject(project);
     setIsModalOpen(true);
+    dispatch(setModalOpen(true)); // Avisa globalmente que abriu
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300); // Limpa após animação
+    dispatch(setModalOpen(false)); // Avisa globalmente que fechou
+    setTimeout(() => setSelectedProject(null), 300);
   };
 
   return (
