@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Sun, Moon, Zap } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTheme, setMode } from '../store/slices/appSlice';
+import { selectTheme, setMode } from '../../store/slices/appSlice';
 
 type WeatherMode = 'day' | 'night' | 'storm';
 

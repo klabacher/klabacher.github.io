@@ -1,9 +1,9 @@
 // src/App.tsx
 import './App.css';
-import AnimatedBackground from './components/AnimatedBackground';
+import AnimatedBackground from './components/Background/AnimatedBackground';
 import ForegroundLayer from './components/ForegroundLayer';
 import SecondLayer from './components/SecondLayer';
-import WeatherControls from './components/WeatherControls';
+import WeatherControls from './components/Background/WeatherControls';
 
 function App() {
   return (

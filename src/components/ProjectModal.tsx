@@ -153,9 +153,9 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                 {project.techStack.map(tech => (
                   <span
                     key={tech.name}
-                    className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-300 bg-orange-500/10 border border-orange-500/20 rounded-full"
+                    className="px-3 py-1 text-xs text-center font-semibold uppercase tracking-wider text-orange-300 bg-orange-500/10 border border-orange-500/20 rounded-full"
                   >
-                    <SmallIcon name={tech.name} icon={tech.icon} size={48} />
+                    <SmallIcon name={tech.name} icon={tech.icon} size={24} />
                     {tech.name}
                   </span>
                 ))}

@@ -14,10 +14,10 @@ const techColorMap: Record<string, string> = {
 
   // Backend & Data
   Python: '#3776AB',
-  Pandas: '#150458', // Roxo escuro/Azul para contraste
+  Pandas: '#3776AB',
   NumPy: '#013243',
   Langgraph: '#E17253',
-  LangChain: '#1C3C3C', // Pode precisar de ajuste em fundo escuro, talvez #F0F0F0
+  LangChain: '#1C3C3C',
   OpenAI: '#10A37F',
   'Google Gemini': '#8E75B2',
 
@@ -49,7 +49,8 @@ interface IconProps {
 
 // --- Componente de Tooltip ---
 const Tooltip = ({ text }: { text: string }) => (
-  <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none opacity-0 group-hover/icon:opacity-100 transition-all duration-300 ease-out z-200">
+  // Z-index alto (z-50) e whitespace-nowrap garantem que fique acima e não quebre linha
+  <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none opacity-0 group-hover/icon:opacity-100 transition-all duration-300 ease-out z-9999">
     <div className="relative bg-zinc-800 text-zinc-200 text-xs font-medium py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap border border-zinc-700/50">
       {text}
       <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-800 border-r border-b border-zinc-700/50 rotate-45"></div>
@@ -57,7 +58,7 @@ const Tooltip = ({ text }: { text: string }) => (
   </div>
 );
 
-// --- Componente Principal (Bento Grid Card) ---
+// --- Componente Principal ---
 function IconMagic({ component, size, text, subStack }: IconProps) {
   const real_size = size === 'big' ? 48 : size === 'small' ? 24 : size;
   const sub_size = 20;
@@ -70,9 +71,13 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
   const MainIcon = safeComponent[0].icon;
 
   return (
-    <div className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/90 hover:border-white/10 hover:-translate-y-1 h-full min-h-40 relative overflow-hidden">
+    <div
+      // REMOVIDO 'overflow-hidden' daqui para o tooltip aparecer
+      className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/90 hover:border-white/10 hover:-translate-y-1 h-full min-h-40 relative"
+    >
+      {/* Glow de Fundo - Adicionado rounded-2xl para não vazar já que o pai não tem overflow-hidden */}
       <div
-        className="absolute inset-0 opacity-0 group-hover/card:opacity-5 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 opacity-0 group-hover/card:opacity-5 transition-opacity duration-500 pointer-events-none rounded-2xl"
         style={{ backgroundColor: mainTechColor }}
       />
 
@@ -81,11 +86,13 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
           <>
             <div className="group/icon relative p-3 bg-white/5 rounded-2xl mb-3 group-hover/card:bg-white/10 transition-colors cursor-help">
               <Tooltip text={safeComponent[0].name} />
+
               <MainIcon
                 size={real_size}
                 className="text-gray-200 transition-all duration-300 group-hover/card:scale-110"
                 style={{ filter: `drop-shadow(0 0 0 transparent)` }}
               />
+
               <MainIcon
                 size={real_size}
                 className="absolute top-3 left-3 opacity-0 group-hover/card:opacity-100 transition-all duration-300 scale-110"
@@ -172,7 +179,7 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
   );
 }
 
-// --- Componente 2: SmallIcon (Apenas ícone com tooltip) ---
+// --- Componente 2: SmallIcon ---
 function SmallIcon({
   icon: Icon,
   size,
@@ -201,18 +208,17 @@ function SmallIcon({
   );
 }
 
-// --- Componente 3: TechTag (NOVO - Estilo Badge/Pílula) ---
+// --- Componente 3: TechTag (Versão Badge) ---
 function TechTag({ icon: Icon, name }: { icon: React.ElementType; name: string }) {
-  const techColor = techColorMap[name] || '#e4e4e7'; // Zinc-200 default
+  const techColor = techColorMap[name] || '#e4e4e7';
 
   return (
     <div
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all duration-300 hover:brightness-125 select-none"
       style={{
-        // Cores dinâmicas baseadas no mapa
-        borderColor: `${techColor}40`, // 25% opacidade na borda
-        backgroundColor: `${techColor}15`, // ~8% opacidade no fundo
-        color: techColor, // Cor do texto e ícone
+        borderColor: `${techColor}40`,
+        backgroundColor: `${techColor}15`,
+        color: techColor,
       }}
     >
       <Icon size={14} style={{ color: techColor }} />
@@ -222,5 +228,4 @@ function TechTag({ icon: Icon, name }: { icon: React.ElementType; name: string }
 }
 
 export default IconMagic;
-// Exportando todos os estilos para uso externo
 export { SmallIcon, TechTag, Tooltip };
