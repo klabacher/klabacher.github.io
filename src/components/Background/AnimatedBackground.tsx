@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useRef, useEffect, useMemo } from 'react';
-import { selectTheme } from '../store/slices/appSlice';
+import { selectTheme } from '@store/slices/appSlice';
 import { useSelector } from 'react-redux';
 
 // --- Tipos e Interfaces ---

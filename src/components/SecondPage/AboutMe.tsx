@@ -1,7 +1,7 @@
 import { SiDevbox } from '@icons-pack/react-simple-icons';
-import { Github, Linkedin } from 'lucide-react';
+import { Github, MapIcon, Linkedin, ScrollText, Briefcase } from 'lucide-react';
 import IconR from '../IconMagic';
-import TMBLogo from '@assets/tmb_logo.png';
+import TMBLogo from '@assets/tmb.png';
 
 export default function AboutMe() {
   return (
@@ -16,10 +16,13 @@ export default function AboutMe() {
             João V <span className="text-orange-400">Klabacher:</span>
           </h3>
           <hr className="border-white/10 mb-4" />
-          <p className="text-gray-400 text-sm">Localização: São Paulo, Brasil</p>
-          <p className="text-gray-400 text-sm">Formação: Cursando psicologia - 6 Semestre</p>
+          <MapIcon /> <p className="text-gray-400 text-sm">São Paulo, Brasil</p>
+          <ScrollText /> <p className="text-gray-400 text-sm">Psychology - 6/10 Semesters</p>
           <p className="text-gray-400 text-sm">
-            Trabalho: https://www.instagram.com/oficial.tmb/
+            <Briefcase />{' '}
+            <a href="https://www.instagram.com/oficial.tmb/" target="_blank" rel="noreferrer">
+              @oficial.tmb
+            </a>
           </p>{' '}
           <img src={TMBLogo} alt="TMB Logo" className="w-20 h-auto my-2 mx-auto" />
           <p className="text-gray-400 text-sm">Localização: São Paulo, Brasil</p>
@@ -29,7 +32,7 @@ export default function AboutMe() {
             href={'http://github.com/klabacher'}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#000000] hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
+            className="flex-1 max-size-lg flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#000000] hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
           >
             <Github size={20} className="group-hover:rotate-12 transition-transform" />
             <span>Github</span>
@@ -38,7 +41,7 @@ export default function AboutMe() {
             href={'https://www.linkedin.com/in/joaovitorklabacher/'}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#4A70A9] hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
+            className="flex-1 max-size-lg flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#4A70A9] hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
           >
             <Linkedin size={20} className="group-hover:rotate-12 transition-transform" />
             <span>Linkedin</span>

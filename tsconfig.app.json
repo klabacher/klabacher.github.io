@@ -10,7 +10,8 @@
     "paths": {
       "@src/*": ["src/*"],
       "@components/*": ["src/components/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@store/*": ["src/store/*"]
     },
     "skipLibCheck": true,
     "moduleResolution": "bundler",

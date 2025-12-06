@@ -71,19 +71,13 @@ const useTypewriterOnce = (text: string, speed = 150) => {
 };
 
 export default function ForegroundLayer() {
-  // Usamos useRef para acessar o elemento DOM diretamente e aplicar transformações
-  // sem causar re-renderizações do React, o que é muito mais performático.
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Variáveis para guardar a posição alvo (onde o mouse está) e a posição atual (onde o elemento está)
   const targetPos = useRef({ x: 0, y: 0 });
   const currentPos = useRef({ x: 0, y: 0 });
 
-  // Fator de suavização (lerp). Quanto menor, mais suave e lento é o movimento.
-  // 0.05 a 0.1 é um bom intervalo para um efeito "flutuante".
   const LERP_FACTOR = 0.08;
 
-  // Intensidade do movimento. Negativo = oposto ao mouse (profundidade).
   const INTENSITY = -30;
 
   const handleScrollDown = () => {
@@ -100,67 +94,53 @@ export default function ForegroundLayer() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
-      // Normaliza a posição do mouse de -0.5 a 0.5
       const x = e.clientX / innerWidth - 0.5;
       const y = e.clientY / innerHeight - 0.5;
 
-      // Define a nova posição alvo baseada na intensidade
       targetPos.current = {
         x: x * INTENSITY,
         y: y * INTENSITY,
       };
     };
 
-    // Função de loop de animação
     const animate = () => {
       if (!contentRef.current) return;
 
-      // Interpolação linear (Lerp) para suavizar o movimento entre a posição atual e a alvo
       currentPos.current.x += (targetPos.current.x - currentPos.current.x) * LERP_FACTOR;
       currentPos.current.y += (targetPos.current.y - currentPos.current.y) * LERP_FACTOR;
 
-      // Aplica a transformação diretamente no estilo do elemento
-      // Usamos translate3d para forçar aceleração de hardware
       contentRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
 
-      // Chama o próximo frame
       requestAnimationFrame(animate);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    // Inicia o loop de animação
     const animationId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationId); // Limpa o loop ao desmontar
+      cancelAnimationFrame(animationId);
     };
   }, [INTENSITY]);
 
   const typingSurname = useTypewriterOnce('KLABACHER', 200);
 
   return (
-    // Container principal com pointer-events-none para deixar clicar no fundo
     <div className="flex flex-col justify-between w-full h-full pointer-events-none">
-      {/* --- HEADER --- */}
-      {/* pointer-events-auto para permitir interação com links e botões do header */}
       <header className="fixed top-0 left-0 right-0 flex items-center justify-between w-full p-6 pointer-events-auto z-50">
         <div className="px-4 py-2 font-bold tracking-tighter text-white border rounded-lg bg-white/5 border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.2)]">
           J. KLABACHER
         </div>
 
-        {/* Navegação */}
         <nav className="flex gap-4">
           <SocialLink icon={<Github />} href="https://github.com/klabacher/" />
           <SocialLink
             icon={<LinkedinIcon size={20} />}
             href="https://www.linkedin.com/in/joaovitorklabacher/"
           />
-          {/* <SocialLink icon={<Mail size={20} />} href="mailto:seuemail@exemplo.com" /> */}
         </nav>
       </header>
 
-      {/* --- ELEMENTO CENTRAL (Com Parallax Suave) --- */}
       <main className="flex items-center justify-center grow w-full">
         <div ref={contentRef} className="pointer-events-auto will-change-transform">
           <div className="text-center group">
@@ -178,7 +158,6 @@ export default function ForegroundLayer() {
               <span className="tracking-[0.25em] text-lg text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg">
                 JOÃO VITOR
               </span>
-              {/* tracking-[0.25em] text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg */}
               <div className="flex items-center justify-center h-[1.2em]">
                 <span className="cursor-blink tracking-[0.25em] border-r-2 border-orange-500 text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/50 font-extrabold filter drop-shadow-lg">
                   {typingSurname}
@@ -202,7 +181,6 @@ export default function ForegroundLayer() {
       </main>
 
       <div className="absolute bottom-10 w-full flex justify-center pb-4 z-50">
-        {/* <p>MAIS SOBRE</p> */}
         <button
           onClick={handleScrollDown}
           className="group pointer-events-auto p-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md animate-bounce hover:bg-white/10 hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all duration-300"
@@ -215,7 +193,6 @@ export default function ForegroundLayer() {
         </button>
       </div>
 
-      {/* Espaçador para equilibrar o layout verticalmente */}
       <div className="h-28" />
     </div>
   );
