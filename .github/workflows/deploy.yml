@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Executa ao fazer push na branch main
+  push:
+    branches: ['main']
+
+  # Permite execução manual pela interface do Actions
+  workflow_dispatch:
+
+# Permissões necessárias para o GITHUB_TOKEN implantar no Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite apenas um deploy concorrente para não haver conflitos
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  # Job de Construção (Build)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        # 'npm ci' é mais seguro e rápido para CI/CD do que 'npm install'
+        run: npm ci
+
+      - name: Build do projeto
+        run: npm run build
+
+      # Correção para React Router no GitHub Pages:
+      # Copia o index.html para 404.html para que rotas diretas funcionem
+      - name: Criar 404.html para roteamento
+        run: cp dist/index.html dist/404.html
+
+      - name: Upload do artefato de build
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # Job de Implantação (Deploy)
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy para o GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -101,6 +101,3 @@ export async function changeTestLanguage(lang: string): Promise<void> {
 
 // Export test i18n instance for advanced usage
 export { testI18n };
-
-export * from '@testing-library/react';
-export { default as userEvent } from '@testing-library/user-event';

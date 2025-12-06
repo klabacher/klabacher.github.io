@@ -24,7 +24,7 @@ function App() {
         id="about"
         className="relative w-full h-screen z-10 flex items-center justify-center snap-start pointer-events-auto"
       >
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
+        <div className="absolute w-full inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
 
         <SecondLayer />
       </section>
