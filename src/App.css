@@ -46,3 +46,12 @@
 .cursor-blink {
   animation: blink-caret 0.75s step-end infinite;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE e Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -24,8 +24,8 @@ export default function Projects() {
 
   return (
     <>
-      <div className="max-w-4xl px-6 text-center">
-        <h2 className="text-4xl text-right font-bold text-white mb-6 drop-shadow-lg">
+      <div className="max-w-4xl w-lg px-6 text-center">
+        <h2 className="text-3xl text-right font-bold text-white mb-6 drop-shadow-lg">
           MEUS PROJETOS
         </h2>
 
