@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/* Custom animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Glass morphism utilities */
+/* .glass {
+  @apply backdrop-blur-lg bg-white/10 border border-white/20;
+}
+
+.glass-dark {
+  @apply backdrop-blur-lg bg-black/20 border border-white/10;
+} */
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
+.cursor-blink {
+  animation: blink-caret 0.75s step-end infinite;
+}
