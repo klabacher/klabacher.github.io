@@ -7,8 +7,10 @@ import {
   Sparkles, // Novo ícone para Soluções
   BrainCircuit,
   LinkedinIcon,
-  ChevronDown, // Novo ícone para IA
+  ChevronDown,
+  LogIn, // Novo ícone para IA
 } from 'lucide-react';
+import socialAuth from '../../../Data/SocialAuth';
 
 // Componente auxiliar para os itens de habilidade
 function SkillItem({
@@ -68,6 +70,55 @@ const useTypewriterOnce = (text: string, speed = 150) => {
   }, [displayText, text, speed]);
 
   return displayText;
+};
+
+const SocialAuth = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleGithubLogin = async () => {
+    setIsLoading(true);
+    setAuthError(null);
+
+    try {
+      await socialAuth.loginWithGitHub();
+    } catch (error) {
+      console.error('Erro ao iniciar login com GitHub', error);
+      setAuthError('Não foi possível iniciar o login.');
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <button
+        type="button"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsHovered(true)}
+        onBlur={() => setIsHovered(false)}
+        onClick={handleGithubLogin}
+        disabled={isLoading}
+        className="group relative flex items-center gap-2 p-3 text-gray-300 transition-all duration-500 rounded-full bg-white/5 hover:bg-white/15 hover:text-white hover:scale-110 backdrop-blur-md border border-white/5 hover:border-orange-500/30 shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        <LogIn size={20} className="inline-block -mt-1 text-orange-200" />
+        <span
+          className={`overflow-hidden whitespace-nowrap text-xs font-semibold tracking-wide transition-all duration-300 ${
+            isHovered ? 'max-w-[180px] opacity-100' : 'max-w-0 opacity-0'
+          }`}
+        >
+          {isLoading ? 'Conectando...' : 'Admin Login via GitHub'}
+        </span>
+      </button>
+
+      {authError && (
+        <span className="text-[10px] text-orange-200/80 bg-white/5 px-2 py-1 rounded-md border border-white/10 backdrop-blur-sm">
+          {authError}
+        </span>
+      )}
+    </div>
+  );
 };
 
 export default function ForegroundLayer() {
@@ -138,6 +189,7 @@ export default function ForegroundLayer() {
             icon={<LinkedinIcon size={20} />}
             href="https://www.linkedin.com/in/joaovitorklabacher/"
           />
+          <SocialAuth />
         </nav>
       </header>
 
