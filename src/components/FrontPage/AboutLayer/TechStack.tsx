@@ -16,7 +16,7 @@ import {
   SiJest,
   SiNumpy,
 } from '@icons-pack/react-simple-icons';
-import IconR from '../IconMagic';
+import IconR from '../../Utils/IconMagic';
 
 export default function TechStack() {
   return (

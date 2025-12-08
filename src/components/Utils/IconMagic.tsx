@@ -71,11 +71,7 @@ function IconMagic({ component, size, text, subStack }: IconProps) {
   const MainIcon = safeComponent[0].icon;
 
   return (
-    <div
-      // REMOVIDO 'overflow-hidden' daqui para o tooltip aparecer
-      className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/90 hover:border-white/10 hover:-translate-y-1 h-full min-h-40 relative"
-    >
-      {/* Glow de Fundo - Adicionado rounded-2xl para não vazar já que o pai não tem overflow-hidden */}
+    <div className="group/card flex flex-col justify-between items-center p-5 rounded-2xl text-white border border-white/5 bg-zinc-900/60 shadow-2xl backdrop-blur-sm font-sans transition-all duration-300 hover:bg-zinc-900/90 hover:border-white/10 hover:-translate-y-1 h-full min-h-40 relative">
       <div
         className="absolute inset-0 opacity-0 group-hover/card:opacity-5 transition-opacity duration-500 pointer-events-none rounded-2xl"
         style={{ backgroundColor: mainTechColor }}

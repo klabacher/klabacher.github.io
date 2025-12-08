@@ -1,4 +1,4 @@
-import { ProjectData } from '../components/ProjectModal';
+import { ProjectData } from '../components/FrontPage/AboutLayer/ProjectModal';
 
 import CountsparkDash from '@assets/countsparks/dashboard.png';
 import CountsparkFront from '@assets/countsparks/frontpage.png';

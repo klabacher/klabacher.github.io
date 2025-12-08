@@ -1,35 +1,16 @@
 // src/App.tsx
 import './App.css';
-import AnimatedBackground from './components/Background/AnimatedBackground';
-import ForegroundLayer from './components/ForegroundLayer';
-import SecondLayer from './components/SecondLayer';
-import WeatherControls from './components/Background/WeatherControls';
+import { Route, Routes } from 'react-router-dom';
+import FrontPage from '@components/FrontPage';
+import DashboardPage from '@src/components/DashboardPage';
 
 function App() {
   return (
-    <div className="no-scrollbar relative w-full h-screen overflow-y-auto overflow-x-hidden bg-gray-900 scroll-smooth snap-y snap-mandatory">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <AnimatedBackground />
-      </div>
-
-      <WeatherControls />
-
-      <section className="relative w-full h-screen z-10 pointer-events-none snap-start">
-        <div className="w-full h-full pointer-events-none">
-          <ForegroundLayer />
-        </div>
-      </section>
-
-      <section
-        id="about"
-        className="relative w-full h-screen z-10 flex items-center justify-center snap-start pointer-events-auto"
-      >
-        {/* O backdrop agora vai alinhar perfeitamente com a seção de cima */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
-
-        <SecondLayer />
-      </section>
-    </div>
+    <Routes>
+      <Route path="/" index element={<FrontPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/*" element={<FrontPage />} />
+    </Routes>
   );
 }
 

@@ -1,7 +1,7 @@
 // Nested components
-import AboutMe from './SecondPage/AboutMe';
-import Projects from './SecondPage/Projects';
-import TechStack from './SecondPage/TechStack';
+import AboutMe from './AboutMe';
+import Projects from './Projects';
+import TechStack from './TechStack';
 
 export default function SecondLayer() {
   return (

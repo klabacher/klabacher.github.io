@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon, Zap } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTheme, setMode, selectModalOpen } from '../../store/slices/appSlice';
+import { selectTheme, setMode, selectModalOpen } from '@store/slices/appSlice';
 
 type WeatherMode = 'day' | 'night' | 'storm';
 

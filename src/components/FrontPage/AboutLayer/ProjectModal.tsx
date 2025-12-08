@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Github, ExternalLink, ChevronDown, ChevronUp, Maximize2 } from 'lucide-react';
 import { IconType } from '@icons-pack/react-simple-icons';
-import { SmallIcon } from './IconMagic';
+import { SmallIcon } from '../../Utils/IconMagic';
 
 // --- Tipos de Dados ---
 export interface ProjectImage {
