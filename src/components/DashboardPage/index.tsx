@@ -565,7 +565,7 @@ function DashboardLayer() {
                   >
                     <option value="">Todos os tipos</option>
                     {uniqueTypes.map(t => (
-                      <option key={t} value={t}>
+                      <option key={t} value={t ? t : ''}>
                         {t}
                       </option>
                     ))}
@@ -580,7 +580,7 @@ function DashboardLayer() {
                   >
                     <option value="">Todos os status</option>
                     {uniqueStatuses.map(s => (
-                      <option key={s} value={s}>
+                      <option key={s} value={s ? s : ''}>
                         {s}
                       </option>
                     ))}

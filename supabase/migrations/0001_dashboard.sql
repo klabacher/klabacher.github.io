@@ -53,22 +53,28 @@ alter table public.projects_internal enable row level security;
 alter table public.repositories enable row level security;
 
 -- Policies
-create policy if not exists "Users read own profile" on public.users_profile
+drop policy if exists "Users read own profile" on public.users_profile;
+create policy "Users read own profile" on public.users_profile
   for select using (auth.uid() = auth_user_id);
 
-create policy if not exists "Users update own profile" on public.users_profile
+drop policy if exists "Users update own profile" on public.users_profile;
+create policy "Users update own profile" on public.users_profile
   for update using (auth.uid() = auth_user_id);
 
-create policy if not exists "Public projects readable" on public.projects_public
+drop policy if exists "Public projects readable" on public.projects_public;
+create policy "Public projects readable" on public.projects_public
   for select using (true);
 
-create policy if not exists "Admins manage public projects" on public.projects_public
+drop policy if exists "Admins manage public projects" on public.projects_public;
+create policy "Admins manage public projects" on public.projects_public
   for all using (auth.role() = 'authenticated');
 
-create policy if not exists "Admins manage internal projects" on public.projects_internal
+drop policy if exists "Admins manage internal projects" on public.projects_internal;
+create policy "Admins manage internal projects" on public.projects_internal
   for all using (auth.role() = 'authenticated');
 
-create policy if not exists "Admins manage repositories" on public.repositories
+drop policy if exists "Admins manage repositories" on public.repositories;
+create policy "Admins manage repositories" on public.repositories
   for all using (auth.role() = 'authenticated');
 
 -- Indexes
