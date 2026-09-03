@@ -5,7 +5,7 @@ import TechStack from './SecondPage/TechStack';
 
 export default function SecondLayer() {
   return (
-    <div className="flex flex-row gap-10">
+    <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-start gap-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-10">
       <AboutMe />
       <TechStack />
       <Projects />

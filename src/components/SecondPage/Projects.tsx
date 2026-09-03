@@ -24,17 +24,18 @@ export default function Projects() {
 
   return (
     <>
-      <div className="max-w-4xl w-lg px-6 text-center">
-        <h2 className="text-3xl text-right font-bold text-white mb-6 drop-shadow-lg">
+      <div className="w-full min-w-0 text-center md:col-span-2 xl:col-span-1">
+        <h2 className="mb-6 text-left text-3xl font-bold text-white drop-shadow-lg xl:text-right">
           MEUS PROJETOS
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
           {PROJECTS_DATA.map(project => (
-            <div
+            <button
+              type="button"
               key={project.id}
               onClick={() => handleOpenProject(project)}
-              className="group relative p-6 bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all duration-300 cursor-pointer rounded-xl overflow-hidden hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] hover:border-orange-500/30 hover:-translate-y-1"
+              className="group relative w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/30 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
             >
               {/* Efeito de brilho no hover */}
               <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
@@ -56,7 +57,7 @@ export default function Projects() {
                   </span>
                 )}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
