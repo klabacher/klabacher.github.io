@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import type { ReactNode } from 'react';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
@@ -84,6 +85,6 @@ vi.mock('react-i18next', async () => {
         changeLanguage: vi.fn().mockResolvedValue(undefined),
       },
     }),
-    Trans: ({ children }: { children: React.ReactNode }) => children,
+    Trans: ({ children }: { children: ReactNode }) => children,
   };
 });

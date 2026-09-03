@@ -6,7 +6,7 @@ import TMBLogo from '@assets/tmb.png';
 export default function AboutMe() {
   return (
     // Aumentei a largura máxima para preencher melhor a coluna
-    <div className="w-full max-w-[450px]">
+    <div className="w-full min-w-0 md:max-w-[450px]">
       <h2 className="text-3xl text-left font-bold text-white mb-6 drop-shadow-lg tracking-tight">
         SOBRE MIM
       </h2>
@@ -61,7 +61,7 @@ export default function AboutMe() {
         {/* --- Botões Sociais --- */}
         <div className="grid grid-cols-2 gap-4">
           <SocialButton
-            href="http://github.com/klabacher"
+            href="https://github.com/klabacher"
             icon={Github}
             label="Github"
             bgColor="bg-[#181717]"
