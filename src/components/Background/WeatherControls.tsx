@@ -17,7 +17,7 @@ export default function WeatherControls() {
       ([entry]) => {
         setIsSecondScreen(entry.isIntersecting);
       },
-      { threshold: 0.2 }
+      { threshold: 0.01 }
     );
 
     const target = document.getElementById('about');
@@ -35,7 +35,9 @@ export default function WeatherControls() {
   // --- Classes Dinâmicas ---
 
   // Posição: Canto superior direito (horizontal) ou Lateral esquerda (vertical)
-  const positionClasses = isSecondScreen ? 'bottom-3 left-3 flex-row' : 'top-1/3 left-3 flex-col';
+  const positionClasses = isSecondScreen
+    ? 'bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] flex-row'
+    : 'bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] flex-row sm:bottom-auto sm:top-1/3 sm:flex-col';
   // Visibilidade: Some se o modal estiver aberto
   const visibilityClasses = isModalOpen
     ? 'opacity-0 pointer-events-none translate-y-[-10px] scale-90'
@@ -59,7 +61,7 @@ export default function WeatherControls() {
       `}
     >
       <div
-        className={`flex gap-1.5 transition-all duration-500 ${isSecondScreen ? 'flex-row' : 'flex-col'}`}
+        className={`flex gap-1.5 transition-all duration-500 ${isSecondScreen ? 'flex-row' : 'flex-row sm:flex-col'}`}
       >
         <ControlBtn
           label="Dia"
@@ -111,10 +113,13 @@ function ControlBtn({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       title={!wide ? label : undefined} // Tooltip nativo se não estiver expandido
+      aria-label={`Usar tema ${label.toLowerCase()}`}
+      aria-pressed={active}
       className={`
-        relative group flex items-center justify-center p-2 rounded-xl transition-all duration-300 border
+        relative group flex min-h-11 min-w-11 items-center justify-center p-2 rounded-xl transition-all duration-300 border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400
         ${active ? `${activeColor} shadow-inner` : 'bg-transparent border-transparent hover:bg-white/10 text-gray-400'}
       `}
     >

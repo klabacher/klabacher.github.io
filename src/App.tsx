@@ -7,14 +7,17 @@ import WeatherControls from './components/Background/WeatherControls';
 
 function App() {
   return (
-    <div className="no-scrollbar relative w-full h-screen overflow-y-auto overflow-x-hidden bg-gray-900 scroll-smooth snap-y snap-mandatory">
+    <div
+      data-app-scroll
+      className="app-scroll no-scrollbar relative w-full overflow-y-auto overflow-x-hidden bg-gray-900 scroll-smooth snap-y snap-proximity lg:snap-mandatory"
+    >
       <div className="fixed inset-0 z-0 pointer-events-none">
         <AnimatedBackground />
       </div>
 
       <WeatherControls />
 
-      <section className="relative w-full h-screen z-10 pointer-events-none snap-start">
+      <section className="hero-section relative z-10 w-full pointer-events-none snap-start">
         <div className="w-full h-full pointer-events-none">
           <ForegroundLayer />
         </div>
@@ -22,9 +25,8 @@ function App() {
 
       <section
         id="about"
-        className="relative w-full h-screen z-10 flex items-center justify-center snap-start pointer-events-auto"
+        className="about-section relative z-10 flex w-full items-start justify-center px-4 py-20 pointer-events-auto snap-start sm:px-6 lg:items-center lg:px-8"
       >
-        {/* O backdrop agora vai alinhar perfeitamente com a seção de cima */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
 
         <SecondLayer />

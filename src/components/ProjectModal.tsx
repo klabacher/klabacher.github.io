@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Github, ExternalLink, ChevronDown, ChevronUp, Maximize2 } from 'lucide-react';
 import { IconType } from '@icons-pack/react-simple-icons';
 import { SmallIcon } from './IconMagic';
@@ -38,19 +38,35 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false); // Estado para Full Screen
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
 
   // Controla animação de entrada/saída
   useEffect(() => {
+    const scrollContainer = document.querySelector<HTMLElement>('[data-app-scroll]');
+    const previousOverflow = scrollContainer?.style.overflow;
+    let animationFrame = 0;
+    let visibilityTimer = 0;
+
     if (isOpen) {
+      previouslyFocusedElement.current = document.activeElement as HTMLElement | null;
       setIsVisible(true);
-      setTimeout(() => setIsAnimating(true), 10);
-      document.body.style.overflow = 'hidden';
+      animationFrame = requestAnimationFrame(() => {
+        setIsAnimating(true);
+        closeButtonRef.current?.focus();
+      });
+      if (scrollContainer) scrollContainer.style.overflow = 'hidden';
     } else {
       setIsAnimating(false);
-      const timer = setTimeout(() => setIsVisible(false), 300);
-      document.body.style.overflow = 'unset';
-      return () => clearTimeout(timer);
+      visibilityTimer = window.setTimeout(() => setIsVisible(false), 300);
+      previouslyFocusedElement.current?.focus();
     }
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      window.clearTimeout(visibilityTimer);
+      if (scrollContainer) scrollContainer.style.overflow = previousOverflow ?? '';
+    };
   }, [isOpen]);
 
   // Resetar estados internos
@@ -73,9 +89,11 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
         }
       }
     };
+    if (!isVisible) return;
+
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose, isFullScreen]);
+  }, [onClose, isFullScreen, isVisible]);
 
   if (!isVisible || !project) return null;
 
@@ -85,14 +103,17 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
     <>
       {/* --- Overlay Principal --- */}
       <div
-        className={`fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ease-out ${
+        className={`fixed inset-0 z-9999 flex items-center justify-center p-2 sm:p-6 transition-all duration-300 ease-out ${
           isAnimating ? 'backdrop-blur-md bg-black/80' : 'backdrop-blur-none bg-black/0'
         }`}
         onClick={onClose}
       >
         {/* --- Container do Modal --- */}
         <div
-          className={`relative w-full max-w-6xl max-h-[90vh] bg-[#0f0f0f] border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) ${
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          className={`modal-panel relative flex w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f] shadow-2xl transition-all duration-500 sm:max-h-[90vh] sm:rounded-3xl cubic-bezier(0.34,1.56,0.64,1) ${
             isAnimating
               ? 'scale-100 opacity-100 translate-y-0'
               : 'scale-90 opacity-0 translate-y-10'
@@ -102,8 +123,11 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           {/* Header Fixo com Botão Fechar */}
           <div className="absolute top-4 right-4 z-20">
             <button
+              ref={closeButtonRef}
+              type="button"
               onClick={onClose}
-              className="p-2 rounded-full bg-black/50 border border-white/10 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 backdrop-blur-md group"
+              aria-label="Fechar detalhes do projeto"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-black/60 p-2 text-white backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 group"
             >
               <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
             </button>
@@ -112,7 +136,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           {/* --- Conteúdo com Scroll --- */}
           <div
             className={`
-              overflow-y-auto flex-1
+              overflow-y-auto overscroll-contain flex-1
               /* Estilização da Scrollbar Principal */
               [&::-webkit-scrollbar]:w-2
               [&::-webkit-scrollbar-track]:bg-[#0f0f0f]
@@ -124,29 +148,34 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 min-h-full">
               {/* --- COLUNA DA ESQUERDA: GALERIA --- */}
-              <div className="lg:col-span-7 bg-black/20 p-6 lg:p-10 flex flex-col justify-center">
+              <div className="flex flex-col justify-center bg-black/20 p-4 pt-16 sm:p-6 sm:pt-16 lg:col-span-7 lg:p-10">
                 <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 shadow-lg group bg-[#0a0a0a]">
                   <img
                     src={currentImage?.url}
                     alt={currentImage?.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="eager"
                   />
 
                   {/* Botão de Maximizar */}
                   <button
+                    type="button"
                     onClick={e => {
                       e.stopPropagation();
                       setIsFullScreen(true);
                     }}
-                    className="absolute top-3 right-3 p-2 bg-black/60 border border-white/10 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-orange-500 hover:border-orange-400 hover:scale-110 z-20 shadow-lg"
+                    aria-label="Expandir imagem"
+                    className="absolute top-3 right-3 z-20 flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-black/60 p-2 text-white opacity-100 shadow-lg transition-all duration-300 hover:scale-110 hover:border-orange-400 hover:bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
                     title="Expandir Imagem"
                   >
                     <Maximize2 size={20} />
                   </button>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/90 via-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none">
-                    <h4 className="text-white font-bold text-lg">{currentImage?.title}</h4>
-                    <p className="text-gray-300 text-sm line-clamp-2">
+                  <div className="absolute bottom-0 left-0 right-0 translate-y-0 bg-linear-to-t from-black/90 via-black/60 to-transparent p-3 pr-16 transition-transform duration-300 pointer-events-none sm:translate-y-full sm:p-4 sm:group-hover:translate-y-0 sm:group-focus-within:translate-y-0">
+                    <h4 className="text-sm font-bold text-white sm:text-lg">
+                      {currentImage?.title}
+                    </h4>
+                    <p className="line-clamp-1 text-xs text-gray-300 sm:line-clamp-2 sm:text-sm">
                       {currentImage?.description}
                     </p>
                   </div>
@@ -156,15 +185,23 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   <div className="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide">
                     {project.images.map((img, index) => (
                       <button
+                        type="button"
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
+                        aria-label={`Mostrar imagem ${index + 1}: ${img.title}`}
+                        aria-pressed={currentImageIndex === index}
                         className={`relative shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                           currentImageIndex === index
                             ? 'border-orange-500 scale-105 ring-2 ring-orange-500/20'
                             : 'border-transparent opacity-60 hover:opacity-100 hover:scale-105'
                         }`}
                       >
-                        <img src={img.url} alt="" className="w-full h-full object-cover" />
+                        <img
+                          src={img.url}
+                          alt=""
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
                       </button>
                     ))}
                   </div>
@@ -172,9 +209,12 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               </div>
 
               {/* --- COLUNA DA DIREITA: DETALHES --- */}
-              <div className="lg:col-span-5 p-8 lg:p-10 bg-[#141414] flex flex-col border-l border-white/5">
+              <div className="flex flex-col border-t border-white/5 bg-[#141414] p-5 sm:p-8 lg:col-span-5 lg:border-t-0 lg:border-l lg:p-10">
                 <div className="mb-6">
-                  <h2 className="text-3xl font-bold text-white mb-2 leading-tight">
+                  <h2
+                    id="project-modal-title"
+                    className="mb-2 pr-10 text-2xl font-bold leading-tight text-white sm:text-3xl"
+                  >
                     {project.title}
                   </h2>
                   <p className="text-gray-400 text-lg leading-relaxed">
@@ -194,7 +234,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   ))}
                 </div>
 
-                <div className="flex gap-4 mb-8">
+                <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                   {project.githubUrl && (
                     <a
                       href={project.githubUrl}
@@ -259,7 +299,9 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                    aria-expanded={isDescriptionExpanded}
                     className="mt-4 self-start text-[10px] uppercase tracking-widest font-bold text-orange-400 hover:text-orange-300 flex items-center gap-2 transition-all hover:gap-3 outline-none group/btn"
                   >
                     {isDescriptionExpanded ? (
@@ -294,8 +336,10 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           onClick={() => setIsFullScreen(false)}
         >
           <button
+            type="button"
             onClick={() => setIsFullScreen(false)}
-            className="absolute top-6 right-6 p-3 bg-white/10 border border-white/10 hover:bg-white/20 text-white rounded-full transition-all z-50 hover:rotate-90 hover:scale-110"
+            aria-label="Fechar imagem ampliada"
+            className="absolute top-[max(1rem,env(safe-area-inset-top))] right-4 z-50 flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 p-2 text-white transition-all hover:rotate-90 hover:scale-110 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 sm:top-6 sm:right-6 sm:p-3"
           >
             <X size={32} />
           </button>
@@ -310,7 +354,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           </div>
 
           <div
-            className="w-full bg-linear-to-t from-black via-black/90 to-transparent pt-12 pb-10 px-6 text-center"
+            className="w-full bg-linear-to-t from-black via-black/90 to-transparent px-4 pt-8 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center sm:px-6 sm:pt-12 sm:pb-10"
             onClick={e => e.stopPropagation()}
           >
             <div className="max-w-5xl mx-auto">

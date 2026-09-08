@@ -1,5 +1,94 @@
 @import 'tailwindcss';
 
+:root {
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #111827;
+}
+
+.site-header {
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1rem
+    max(1rem, env(safe-area-inset-left));
+}
+
+@media (min-width: 640px) {
+  .site-header {
+    padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) 1.5rem
+      max(1.5rem, env(safe-area-inset-left));
+  }
+}
+
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-scroll,
+.hero-section {
+  height: 100vh;
+}
+
+.about-section {
+  min-height: 100vh;
+}
+
+.modal-panel {
+  max-height: calc(100vh - 1rem);
+}
+
+@supports (height: 100dvh) {
+  .app-scroll,
+  .hero-section {
+    height: 100dvh;
+  }
+
+  .about-section {
+    min-height: 100dvh;
+  }
+
+  .modal-panel {
+    max-height: calc(100dvh - 1rem);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero-main {
+    padding-top: 3.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .hero-content {
+    transform: translateY(-1.75rem) scale(0.58);
+    transform-origin: center;
+  }
+}
+
+@media (orientation: portrait) and (max-height: 520px) {
+  .hero-main {
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+  }
+
+  .hero-content {
+    transform: scale(0.82);
+    transform-origin: center;
+  }
+}
+
 /* Custom animations */
 @keyframes spin-slow {
   from {
@@ -54,4 +143,19 @@
 .no-scrollbar {
   -ms-overflow-style: none; /* IE e Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

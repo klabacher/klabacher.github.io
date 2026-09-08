@@ -1,7 +1,5 @@
 // src/components/AnimatedBackground.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import React, { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { selectTheme } from '@store/slices/appSlice';
 import { useSelector } from 'react-redux';
 
@@ -28,6 +26,12 @@ interface Particle {
   vy: number;
   life: number;
   type: 'rain' | 'firefly';
+}
+
+interface Tree {
+  x: number;
+  scale: number;
+  type: 'dead' | 'pine';
 }
 
 interface AnimState {
@@ -121,8 +125,14 @@ const PALETTES: Record<WeatherMode, Palette> = {
 };
 
 // --- Utilitários ---
-const hexToRgb = (hex: string) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+const colorToRgb = (color: string) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+  const rgb = /^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i.exec(color);
+
+  if (rgb) {
+    return { r: Number(rgb[1]), g: Number(rgb[2]), b: Number(rgb[3]) };
+  }
+
   return result
     ? {
         r: parseInt(result[1], 16),
@@ -133,8 +143,8 @@ const hexToRgb = (hex: string) => {
 };
 
 const lerpColor = (a: string, b: string, t: number) => {
-  const c1 = hexToRgb(a);
-  const c2 = hexToRgb(b);
+  const c1 = colorToRgb(a);
+  const c2 = colorToRgb(b);
   const r = Math.round(c1.r + (c2.r - c1.r) * t);
   const g = Math.round(c1.g + (c2.g - c1.g) * t);
   const b_val = Math.round(c1.b + (c2.b - c1.b) * t);
@@ -156,7 +166,7 @@ const generateTerrain = (segments: number, roughness: number) => {
   return points;
 };
 
-const generateTrees = (count: number, width: number) => {
+const generateTrees = (count: number, width: number): Tree[] => {
   return Array.from({ length: count }).map(() => ({
     x: randomRange(-200, width + 200),
     scale: randomRange(0.8, 1.8),
@@ -168,6 +178,7 @@ const generateTrees = (count: number, width: number) => {
 
 export default function AnimatedBackground() {
   const mode = useSelector(selectTheme);
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // OTIMIZAÇÃO DE PERFORMANCE:
@@ -176,7 +187,7 @@ export default function AnimatedBackground() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
 
   // Otimização: useRef para dimensões evita re-renders desnecessários no resize se não usarmos no JSX
-  const dimensions = useRef({ w: 0, h: 0 });
+  const dimensions = useRef({ w: 0, h: 0, dpr: 1 });
 
   // Dados persistentes do terreno
   const terrainData = useMemo(
@@ -214,7 +225,7 @@ export default function AnimatedBackground() {
 
   const getCurrentPalette = (state: AnimState) => {
     const t = Math.min(state.lerpFactor, 1);
-    const start = PALETTES[state.currentMode];
+    const start = state.lastColors;
     const end = PALETTES[state.targetMode];
 
     if (!start || !end) return PALETTES.day;
@@ -235,27 +246,66 @@ export default function AnimatedBackground() {
 
   // Resize Handler
   useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    let resizeFrame = 0;
+
     const handleResize = () => {
-      if (canvasRef.current) {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        canvasRef.current.width = w;
-        canvasRef.current.height = h;
-        dimensions.current = { w, h }; // Atualiza ref
-      }
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        const { width, height } = container.getBoundingClientRect();
+        const w = Math.max(1, Math.round(width));
+        const h = Math.max(1, Math.round(height));
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        if (
+          dimensions.current.w === w &&
+          dimensions.current.h === h &&
+          dimensions.current.dpr === dpr
+        ) {
+          return;
+        }
+
+        dimensions.current = { w, h, dpr };
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+      });
     };
+
+    const observer =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(handleResize);
+    observer?.observe(container);
     window.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(resizeFrame);
+      observer?.disconnect();
+      window.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  // Event Listener de Mouse (Agora atualiza apenas a REF)
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mousePos.current = {
-      x: e.clientX / window.innerWidth,
-      y: e.clientY / window.innerHeight,
+  useEffect(() => {
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!finePointer || reducedMotion) return;
+
+    const handlePointerMove = (event: PointerEvent) => {
+      mousePos.current = {
+        x: event.clientX / Math.max(window.innerWidth, 1),
+        y: event.clientY / Math.max(window.innerHeight, 1),
+      };
     };
-  };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, []);
 
   // Loop de Renderização
   useEffect(() => {
@@ -264,16 +314,31 @@ export default function AnimatedBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
+    let lastFrameTime = 0;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const lowPowerDevice = coarsePointer || (navigator.hardwareConcurrency || 8) <= 4;
+    const targetFps = reducedMotion ? 10 : lowPowerDevice ? 30 : 60;
+    const frameInterval = 1000 / targetFps;
 
-    const render = () => {
+    const render = (timestamp: number) => {
+      animationFrameId = requestAnimationFrame(render);
+
+      if (document.hidden || timestamp - lastFrameTime < frameInterval - 0.5) return;
+
+      const elapsed = lastFrameTime === 0 ? frameInterval : timestamp - lastFrameTime;
+      lastFrameTime = timestamp;
+      const frameScale = Math.min(elapsed / (1000 / 60), 3);
+
       // Usa os valores da ref
-      const width = canvas.width;
-      const height = canvas.height;
+      const { w: width, h: height, dpr } = dimensions.current;
       if (width === 0) return; // Evita erro inicial
 
-      animState.current.time += 0.01;
-      animState.current.lerpFactor += 0.02;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      animState.current.time += 0.01 * frameScale;
+      animState.current.lerpFactor += 0.02 * frameScale;
       if (animState.current.lerpFactor > 1) animState.current.lerpFactor = 1;
 
       const palette = getCurrentPalette(animState.current);
@@ -399,17 +464,21 @@ export default function AnimatedBackground() {
       drawPowerLines(ctx, width, height, offsetCloseX, offsetCloseY);
 
       // 6. PARTÍCULAS
-      handleParticles(ctx, width, height, animState.current, mode);
+      const areaRatio = Math.min(1, (width * height) / (1920 * 1080));
+      const particleLimit = reducedMotion
+        ? 0
+        : Math.round((lowPowerDevice ? 260 : 650) * Math.max(0.45, areaRatio));
+      handleParticles(ctx, width, height, animState.current, mode, frameScale, particleLimit);
 
       // Relâmpago
       if (mode === 'storm') {
-        if (Math.random() > 0.99 && animState.current.lightningOpacity <= 0) {
+        if (!reducedMotion && Math.random() > 0.99 && animState.current.lightningOpacity <= 0) {
           animState.current.lightningOpacity = 0.8;
         }
         if (animState.current.lightningOpacity > 0) {
           ctx.fillStyle = `rgba(255, 255, 255, ${animState.current.lightningOpacity})`;
           ctx.fillRect(0, 0, width, height);
-          animState.current.lightningOpacity -= 0.05;
+          animState.current.lightningOpacity -= 0.05 * frameScale;
         }
       }
 
@@ -419,21 +488,16 @@ export default function AnimatedBackground() {
       ctx.fillStyle = palette.fog;
       ctx.fillRect(0, 0, width, height);
       ctx.restore();
-
-      animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(render);
 
     return () => cancelAnimationFrame(animationFrameId);
   }, [mode, terrainData]); // Removemos mousePos e dimensions das dependências pois agora são refs
 
   return (
-    <div
-      className="w-screen h-screen relative z-0 bg-gray-500 overflow-hidden"
-      onMouseMove={handleMouseMove}
-    >
-      <canvas ref={canvasRef} className="block absolute top-0 left-0" />
+    <div ref={containerRef} className="relative z-0 h-full w-full overflow-hidden bg-gray-500">
+      <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 block" />
 
       {/* --- CORREÇÃO DO OVERLAY --- */}
       {/* 1. Usamos z-10 para garantir que fique acima do Canvas (que é z-auto por padrão) */}
@@ -479,7 +543,7 @@ function drawMountainLayer(
 
 function drawTrees(
   ctx: CanvasRenderingContext2D,
-  trees: any[],
+  trees: Tree[],
   w: number,
   yBase: number,
   color: string,
@@ -491,12 +555,12 @@ function drawTrees(
   const windBase = Math.sin(time * 2);
   const wind = windBase * (isStorm ? 15 : 4);
 
-  const visibleTrees = trees.filter((t: any) => {
-    const x = t.x + offsetX;
+  const visibleTrees = trees.filter(tree => {
+    const x = tree.x + offsetX;
     return x > -50 && x < w + 50;
   });
 
-  visibleTrees.forEach((tree: any) => {
+  visibleTrees.forEach(tree => {
     const x = tree.x + offsetX;
     const y = yBase + tree.scale * 10;
     const h = 40 * tree.scale;
@@ -553,18 +617,20 @@ function handleParticles(
   w: number,
   h: number,
   state: AnimState,
-  mode: WeatherMode
+  mode: WeatherMode,
+  frameScale: number,
+  particleLimit: number
 ) {
   const isStorm = mode === 'storm';
   const isNight = mode === 'night';
 
-  if (!isStorm && !isNight) {
+  if ((!isStorm && !isNight) || particleLimit <= 0) {
     state.particles = [];
     return;
   }
 
   if (isStorm) {
-    if (state.particles.length < 800) {
+    if (state.particles.length < particleLimit) {
       for (let i = 0; i < 5; i++) {
         state.particles.push({
           x: Math.random() * (w + 400) - 200,
@@ -577,7 +643,7 @@ function handleParticles(
       }
     }
   } else if (isNight) {
-    if (state.particles.length < 60) {
+    if (state.particles.length < Math.min(60, particleLimit)) {
       if (Math.random() > 0.92) {
         state.particles.push({
           x: Math.random() * w,
@@ -606,9 +672,9 @@ function handleParticles(
       continue;
     }
 
-    p.x += p.vx;
-    p.y += p.vy;
-    p.life--;
+    p.x += p.vx * frameScale;
+    p.y += p.vy * frameScale;
+    p.life -= frameScale;
 
     if (p.type === 'rain') {
       ctx.strokeStyle = rainColor;

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -48,10 +49,9 @@ interface WrapperProps {
   locale?: string;
 }
 
-interface CustomRenderResult extends Omit<RenderResult, 'rerender'> {
+interface CustomRenderResult extends RenderResult {
   route: string;
   locale: string;
-  rerender: (newUi: ReactElement) => void;
 }
 
 function AllProviders({ children, route = '/', locale = 'en' }: WrapperProps) {
@@ -85,12 +85,6 @@ export function renderApp(ui: ReactElement, options: CustomRenderOptions = {}): 
     ...result,
     route,
     locale,
-    rerender: (newUi: ReactElement) =>
-      result.rerender(
-        <AllProviders route={route} locale={locale}>
-          {newUi}
-        </AllProviders>
-      ),
   };
 }
 

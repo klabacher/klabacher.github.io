@@ -20,7 +20,7 @@ import IconR from '../IconMagic';
 
 export default function TechStack() {
   return (
-    <div className="max-w-2xl px-6 justify-center text-center">
+    <div className="w-full min-w-0 justify-center text-center">
       <h2 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Tech Stack</h2>
 
       <div className="grid grid-cols-1 gap-4 items-center text-center">
